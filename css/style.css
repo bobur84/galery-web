@@ -166,7 +166,6 @@ em{font-style:italic;color:var(--gold)}
 .c-val{display:block;font-family:var(--serif);font-size:19px;color:#fff;margin-bottom:6px}
 a.c-val:hover{color:var(--gold)}
 .c-note{font-size:13px;color:rgba(255,255,255,.5)}
-.js-fill{opacity:.55}
 
 /* ---------- форма заявки ---------- */
 .form-card{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.15);padding:34px 32px}

@@ -199,10 +199,12 @@
           <span class="c-val">{{con.hours_val}}</span>
           <span class="c-note">{{con.hours_note}}</span>
         </div>
+        <!-- Телефон на сайте не публикуем: связь через почту и форму,
+             менеджер перезванивает сам. -->
         <div class="contact-card">
-          <span class="c-lbl">{{con.phone_lbl}}</span>
-          <a class="c-val js-fill" href="tel:">+998 (__) ___-__-__</a>
-          <span class="c-note">{{con.phone_note}}</span>
+          <span class="c-lbl">{{con.email_lbl}}</span>
+          <a class="c-val" href="mailto:{{co.email}}">{{co.email}}</a>
+          <span class="c-note">{{con.email_note}}</span>
         </div>
       </div>
 
