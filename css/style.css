@@ -147,6 +147,8 @@ em{font-style:italic;color:var(--gold)}
 .stat span{font-size:14px;color:var(--muted)}
 
 /* ---------- контакты ---------- */
+.contact-wrap{display:grid;grid-template-columns:1fr 1.05fr;gap:34px;align-items:start}
+.contacts-col{display:grid;gap:18px}
 .contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
 .contact-card{border:1px solid rgba(255,255,255,.16);padding:28px 26px;transition:.25s}
 .contact-card:hover{border-color:var(--gold)}
@@ -156,9 +158,33 @@ em{font-style:italic;color:var(--gold)}
 a.c-val:hover{color:var(--gold)}
 .c-note{font-size:13px;color:rgba(255,255,255,.5)}
 .js-fill{opacity:.55}
-.fill-note{
-  margin-top:26px;text-align:center;font-size:13.5px;color:var(--gold-soft);
-  border:1px dashed rgba(201,169,97,.4);padding:12px;border-radius:2px;
+
+/* ---------- форма заявки ---------- */
+.form-card{background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.15);padding:34px 32px}
+.form-card h3{color:#fff;font-size:24px;margin-bottom:6px}
+.form-sub{color:rgba(255,255,255,.6);font-size:14.5px;margin-bottom:22px}
+.fld{margin-bottom:16px}
+.fld label{display:block;font-size:12px;letter-spacing:.13em;text-transform:uppercase;
+  color:rgba(255,255,255,.62);margin-bottom:7px}
+.fld label i{color:var(--gold);font-style:normal}
+.fld input,.fld textarea{
+  width:100%;background:rgba(0,0,0,.24);border:1px solid rgba(255,255,255,.18);
+  color:#fff;padding:13px 15px;font-size:15.5px;font-family:inherit;border-radius:2px;
+  transition:.2s;resize:vertical;
+}
+.fld input::placeholder,.fld textarea::placeholder{color:rgba(255,255,255,.32)}
+.fld input:focus,.fld textarea:focus{outline:none;border-color:var(--gold);
+  background:rgba(0,0,0,.34)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+#leadBtn{width:100%;margin-top:6px}
+#leadBtn:disabled{opacity:.6;cursor:wait;transform:none}
+.form-note{margin-top:14px;font-size:14.5px;min-height:1px}
+.form-note.ok{color:#7fd18d}
+.form-note.err{color:#ef9a9a}
+.form-privacy{margin-top:12px;font-size:12px;color:rgba(255,255,255,.38);line-height:1.6}
+
+@media (max-width:900px){
+  .contact-wrap{grid-template-columns:1fr;gap:26px}
 }
 
 /* ---------- подвал ---------- */

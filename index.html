@@ -194,33 +194,56 @@
     <h2 class="center">Свяжитесь <em>с нами</em></h2>
     <p class="sub center">Ответим на вопросы по ассортименту, наличию и условиям поставки.</p>
 
-    <div class="contacts">
-      <div class="contact-card">
-        <span class="c-lbl">Телефон</span>
-        <a class="c-val js-fill" href="tel:">+998 (__) ___-__-__</a>
-        <span class="c-note">отдел продаж</span>
-      </div>
-      <div class="contact-card">
-        <span class="c-lbl">Адрес</span>
-        <span class="c-val js-fill">г. Ташкент, ул. ______, д. __</span>
-        <span class="c-note">склад и шоурум</span>
-      </div>
-      <div class="contact-card">
-        <span class="c-lbl">Режим работы</span>
-        <span class="c-val js-fill">Пн–Сб __:__ — __:__</span>
-        <span class="c-note">воскресенье — выходной</span>
-      </div>
-      <div class="contact-card">
-        <span class="c-lbl">E-mail</span>
-        <a class="c-val js-fill" href="mailto:">info@galery.uz</a>
-        <span class="c-note">общие вопросы</span>
-      </div>
-    </div>
+    <div class="contact-wrap">
 
-    <p class="fill-note">
-      ⓘ Контактные данные пока не заполнены — пришлите телефон, адрес, режим работы и почту,
-      и они появятся здесь.
-    </p>
+      <div class="contacts-col">
+        <div class="contact-card">
+          <span class="c-lbl">Адрес</span>
+          <span class="c-val">ул. Абдулла Кодирий, 38А</span>
+          <span class="c-note">г. Ташкент · склад и шоурум</span>
+        </div>
+        <div class="contact-card">
+          <span class="c-lbl">Режим работы</span>
+          <span class="c-val">Ежедневно 9:00 — 18:00</span>
+          <span class="c-note">приезжайте, покажем материалы вживую</span>
+        </div>
+        <div class="contact-card">
+          <span class="c-lbl">Телефон</span>
+          <a class="c-val js-fill" href="tel:">+998 (__) ___-__-__</a>
+          <span class="c-note">отдел продаж</span>
+        </div>
+      </div>
+
+      <!-- ФОРМА ЗАЯВКИ -->
+      <div class="form-card">
+        <h3>Оставьте заявку</h3>
+        <p class="form-sub">Перезвоним, ответим по наличию и ценам, поможем с расчётом.</p>
+
+        <form id="leadForm" novalidate>
+          <div class="fld">
+            <label for="f-name">Ваше имя <i>*</i></label>
+            <input id="f-name" name="name" required maxlength="120" autocomplete="name" placeholder="Как к вам обращаться">
+          </div>
+          <div class="fld">
+            <label for="f-phone">Телефон <i>*</i></label>
+            <input id="f-phone" name="phone" required maxlength="60" type="tel" autocomplete="tel" placeholder="+998 __ ___ __ __">
+          </div>
+          <div class="fld">
+            <label for="f-msg">Что вас интересует</label>
+            <textarea id="f-msg" name="message" rows="3" maxlength="2000" placeholder="Например: плинтус IDEAL на 120 м², нужен расчёт"></textarea>
+          </div>
+          <!-- ловушка для ботов: живой человек это поле не видит и не заполняет -->
+          <div class="hp" aria-hidden="true">
+            <label for="f-company">Компания</label>
+            <input id="f-company" name="company" tabindex="-1" autocomplete="off">
+          </div>
+          <button type="submit" class="btn btn-gold btn-lg" id="leadBtn">Отправить заявку</button>
+          <p class="form-note" id="leadMsg" role="status"></p>
+          <p class="form-privacy">Нажимая кнопку, вы соглашаетесь на обработку контактных данных для ответа на обращение.</p>
+        </form>
+      </div>
+
+    </div>
   </div>
 </section>
 
@@ -259,6 +282,41 @@
   document.querySelectorAll('.nav-links a').forEach(function(a){
     a.addEventListener('click', function(){ nav.classList.remove('open'); });
   });
+  // ---- форма заявки ----
+  var form = document.getElementById('leadForm');
+  if (form){
+    var btn = document.getElementById('leadBtn'), out = document.getElementById('leadMsg');
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = form.name.value.trim(), phone = form.phone.value.trim();
+      out.className = 'form-note';
+      if (!name || !phone){ out.classList.add('err'); out.textContent = 'Укажите имя и телефон.'; return; }
+      btn.disabled = true; var old = btn.textContent; btn.textContent = 'Отправляем…';
+      fetch('/api/contact', {
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body: new URLSearchParams(new FormData(form)).toString()
+      })
+      .then(function(r){ return r.json().then(function(j){ return {s:r.status, j:j}; }); })
+      .then(function(res){
+        if (res.j && res.j.ok){
+          form.reset();
+          out.classList.add('ok');
+          out.textContent = 'Спасибо! Заявка принята — мы свяжемся с вами в рабочее время.';
+        } else {
+          out.classList.add('err');
+          out.textContent = (res.j && res.j.error) ? res.j.error :
+            'Не удалось отправить. Попробуйте позже или приезжайте к нам.';
+        }
+      })
+      .catch(function(){
+        out.classList.add('err');
+        out.textContent = 'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.';
+      })
+      .finally(function(){ btn.disabled = false; btn.textContent = old; });
+    });
+  }
+
   // плавное появление секций
   if ('IntersectionObserver' in window){
     var io = new IntersectionObserver(function(es){
