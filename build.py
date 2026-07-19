@@ -32,8 +32,12 @@ import shutil
 import sys
 
 SITE = "https://galery.uz"
-LANGS = ["ru", "uz", "en"]          # первый — язык по умолчанию (x-default)
-LABELS = {"ru": "RU", "uz": "UZ", "en": "EN"}
+# Порядок = порядок кнопок в переключателе языков. Узбекский первым: это
+# государственный язык страны, где работает компания.
+# На выбор языка по стране этот список НЕ влияет — за него отвечает nginx
+# (карта $lang_by_country в deploy/nginx-report.conf).
+LANGS = ["uz", "ru", "en"]
+LABELS = {"uz": "UZ", "ru": "RU", "en": "EN"}
 
 # Страницы сайта. slug — адрес внутри языка: "" это /ru/, "privacy" это /ru/privacy/.
 # doc — имя файла с текстом в web/legal/ (<doc>.<язык>.html); у главной его нет.
