@@ -201,7 +201,11 @@ a.c-val:hover{color:var(--gold)}
 
 /* ---------- юридические страницы (политика, условия) ---------- */
 .legal-page{background:var(--paper)}
-.legal{padding:130px 0 90px}
+/* Шапка здесь НЕ липкая, в отличие от главной. На длинном тексте это только мешает:
+   при прокрутке абзацы уезжали под неё, а высоту шапки приходилось компенсировать
+   отступом — стоило ей вырасти на узком экране, как заголовок оказывался под ней. */
+.legal-page .nav{position:static;padding:14px 0}
+.legal{padding:54px 0 90px}
 .legal-in{max-width:780px}
 .legal h1{font-size:clamp(30px,4.4vw,46px);margin-bottom:10px}
 .legal h2{
@@ -221,8 +225,12 @@ a.c-val:hover{color:var(--gold)}
 .legal-updated{font-size:13.5px;color:var(--muted);margin-bottom:34px}
 .legal-back{margin-top:46px;padding-top:24px;border-top:1px solid var(--line)}
 @media (max-width:760px){
-  .legal{padding:104px 0 64px}
+  .legal{padding:34px 0 64px}
   .legal h2{font-size:20px}
+  /* «На главную» в шапке не помещается рядом с логотипом и переключателем языка —
+     кнопка вылезала за край экрана. На узком экране убираем: логотип кликабельный,
+     и внизу страницы есть такая же ссылка. */
+  .legal-page .nav-cta .btn{display:none}
 }
 
 @media (max-width:900px){
