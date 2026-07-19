@@ -1,0 +1,205 @@
+/* Galereya Best — публичный сайт. Самодостаточный CSS: без внешних шрифтов и библиотек,
+   чтобы страница открывалась мгновенно и хорошо кэшировалась. */
+
+:root{
+  --ink:#12151a;          /* графит — основной тёмный */
+  --ink-2:#1b2028;
+  --ink-3:#262d38;
+  --gold:#c9a961;         /* латунь — акцент */
+  --gold-soft:#e0c88c;
+  --paper:#fbfaf8;        /* тёплый белый */
+  --paper-2:#f3f1ed;
+  --text:#2a2f38;
+  --muted:#6b7280;
+  --line:#e4e0d9;
+  --serif:Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --wrap:1180px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);color:var(--text);background:var(--paper);
+  font-size:17px;line-height:1.7;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 28px}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+/* ---------- типографика ---------- */
+h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.15;letter-spacing:-.01em}
+h1{font-size:clamp(38px,6vw,72px)}
+h2{font-size:clamp(30px,4vw,46px);margin-bottom:14px}
+h3{font-size:21px;margin-bottom:10px}
+em{font-style:italic;color:var(--gold)}
+.eyebrow{
+  font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold);font-weight:600;margin-bottom:14px;
+}
+.center{text-align:center}
+.sub{color:var(--muted);max-width:620px;margin:0 auto 52px;text-align:center}
+.big{font-size:20px;color:var(--ink);margin-bottom:18px}
+
+/* ---------- кнопки ---------- */
+.btn{
+  display:inline-block;padding:13px 26px;border-radius:2px;font-size:14px;
+  letter-spacing:.09em;text-transform:uppercase;font-weight:600;
+  transition:.25s ease;border:1px solid transparent;cursor:pointer;
+}
+.btn-gold{background:var(--gold);color:#1a1a1a}
+.btn-gold:hover{background:var(--gold-soft);transform:translateY(-2px)}
+.btn-ghost{border-color:rgba(255,255,255,.35);color:#fff}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.btn-lg{padding:16px 34px;font-size:15px}
+.btn-sm{padding:10px 20px;font-size:12px}
+
+/* ---------- навигация ---------- */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:.3s ease;padding:20px 0}
+.nav.solid{background:rgba(18,21,26,.94);backdrop-filter:blur(10px);padding:12px 0;
+  box-shadow:0 1px 0 rgba(255,255,255,.07)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{display:flex;align-items:center;gap:11px}
+.logo-mark{
+  width:38px;height:38px;border:1px solid var(--gold);color:var(--gold);
+  font-family:var(--serif);font-size:21px;display:flex;align-items:center;
+  justify-content:center;flex:0 0 38px;
+}
+.logo-txt{font-family:var(--serif);font-size:20px;color:#fff;letter-spacing:.02em}
+.nav-links{display:flex;gap:30px}
+.nav-links a{
+  color:rgba(255,255,255,.82);font-size:14px;letter-spacing:.04em;
+  padding:4px 0;border-bottom:1px solid transparent;transition:.2s;
+}
+.nav-links a:hover{color:var(--gold);border-color:var(--gold)}
+.nav-cta{display:flex;align-items:center;gap:14px}
+.burger{display:none;background:none;border:0;flex-direction:column;gap:5px;padding:6px}
+.burger span{width:24px;height:2px;background:#fff;display:block;transition:.25s}
+
+/* ---------- герой ---------- */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;
+  color:#fff;overflow:hidden;padding:120px 0 80px}
+.hero-bg{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse at 20% 15%, rgba(201,169,97,.16), transparent 55%),
+    radial-gradient(ellipse at 85% 80%, rgba(201,169,97,.10), transparent 50%),
+    linear-gradient(160deg,#0e1116 0%,#12151a 45%,#1b2028 100%);
+}
+.hero-bg::after{  /* тонкая «сетка отделки» */
+  content:"";position:absolute;inset:0;opacity:.05;
+  background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);
+  background-size:64px 64px;
+}
+.hero-in{position:relative;z-index:1;max-width:900px}
+.hero h1{margin-bottom:24px}
+.lead{font-size:19px;color:rgba(255,255,255,.78);max-width:640px;margin-bottom:38px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:64px}
+.hero-stats{display:flex;gap:56px;flex-wrap:wrap;
+  border-top:1px solid rgba(255,255,255,.14);padding-top:28px}
+.hero-stats b{display:block;font-family:var(--serif);font-size:34px;color:var(--gold);line-height:1}
+.hero-stats span{font-size:13px;color:rgba(255,255,255,.6);letter-spacing:.05em}
+.scroll-hint{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+  width:1px;height:52px;background:linear-gradient(var(--gold),transparent);z-index:1}
+
+/* ---------- секции ---------- */
+.section{padding:110px 0}
+.section-alt{background:var(--paper-2)}
+.section-dark{background:var(--ink);color:#fff}
+.section-dark .sub{color:rgba(255,255,255,.62)}
+.section-dark h2{color:#fff}
+
+/* ---------- карточки каталога ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:26px}
+.card{
+  background:#fff;border:1px solid var(--line);padding:38px 32px;
+  transition:.3s ease;position:relative;
+}
+.card::before{content:"";position:absolute;top:0;left:0;width:0;height:2px;
+  background:var(--gold);transition:.35s ease}
+.card:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(18,21,26,.09);border-color:#d9d3c8}
+.card:hover::before{width:100%}
+.card-ico{font-size:30px;color:var(--gold);margin-bottom:16px;line-height:1}
+.card p{color:var(--muted);font-size:15.5px}
+.tags{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);
+  font-size:12.5px;letter-spacing:.06em;color:var(--ink);font-weight:600}
+
+/* ---------- бренды ---------- */
+.brands{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;max-width:940px;margin:0 auto}
+.brands span{
+  border:1px solid rgba(255,255,255,.16);padding:13px 24px;font-size:13.5px;
+  letter-spacing:.14em;color:rgba(255,255,255,.78);transition:.25s;
+}
+.brands span:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+
+/* ---------- услуги ---------- */
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:38px 44px}
+.feat{border-left:2px solid var(--gold);padding-left:22px}
+.feat p{color:var(--muted);font-size:15.5px}
+
+/* ---------- о компании ---------- */
+.about-grid{display:grid;grid-template-columns:1.35fr .95fr;gap:70px;align-items:start}
+.about-grid p{margin-bottom:14px;color:var(--muted)}
+.about-side{display:grid;gap:18px}
+.stat{background:#fff;border:1px solid var(--line);padding:24px 26px}
+.stat b{display:block;font-family:var(--serif);font-size:32px;color:var(--ink);line-height:1.1}
+.stat span{font-size:14px;color:var(--muted)}
+
+/* ---------- контакты ---------- */
+.contacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+.contact-card{border:1px solid rgba(255,255,255,.16);padding:28px 26px;transition:.25s}
+.contact-card:hover{border-color:var(--gold)}
+.c-lbl{display:block;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px}
+.c-val{display:block;font-family:var(--serif);font-size:19px;color:#fff;margin-bottom:6px}
+a.c-val:hover{color:var(--gold)}
+.c-note{font-size:13px;color:rgba(255,255,255,.5)}
+.js-fill{opacity:.55}
+.fill-note{
+  margin-top:26px;text-align:center;font-size:13.5px;color:var(--gold-soft);
+  border:1px dashed rgba(201,169,97,.4);padding:12px;border-radius:2px;
+}
+
+/* ---------- подвал ---------- */
+.footer{background:#0e1116;color:rgba(255,255,255,.72);padding:64px 0 0}
+.footer-in{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:44px;padding-bottom:44px}
+.foot-txt{font-size:14.5px;color:rgba(255,255,255,.5);margin-top:14px;max-width:290px}
+.foot-links{display:flex;flex-direction:column;gap:11px;font-size:14.5px}
+.foot-links a:hover{color:var(--gold)}
+.foot-staff{text-align:right}
+.foot-note{font-size:12.5px;color:rgba(255,255,255,.4);margin-top:10px}
+.copyright{border-top:1px solid rgba(255,255,255,.09);padding-top:22px;padding-bottom:26px;
+  font-size:13px;color:rgba(255,255,255,.42)}
+
+/* ---------- появление при скролле ---------- */
+.rise{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.rise.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .rise{opacity:1;transform:none;transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ---------- адаптив ---------- */
+@media (max-width:900px){
+  .about-grid{grid-template-columns:1fr;gap:40px}
+  .footer-in{grid-template-columns:1fr;gap:32px}
+  .foot-staff{text-align:left}
+  .foot-links{flex-direction:row;flex-wrap:wrap;gap:18px}
+}
+@media (max-width:760px){
+  body{font-size:16px}
+  .section{padding:76px 0}
+  .burger{display:flex}
+  .nav-links{
+    position:absolute;top:100%;left:0;right:0;background:rgba(18,21,26,.98);
+    flex-direction:column;gap:0;padding:10px 0;display:none;
+  }
+  .nav.open .nav-links{display:flex}
+  .nav.open{background:rgba(18,21,26,.98)}
+  .nav-links a{padding:13px 28px;border-bottom:0}
+  .nav-cta .btn-gold{display:none}
+  .hero{min-height:auto;padding:140px 0 70px}
+  .hero-stats{gap:32px}
+  .hero-stats b{font-size:28px}
+}
