@@ -1,0 +1,77 @@
+<!doctype html>
+<!-- Каркас юридической страницы (политика, условия). Сам текст документа лежит
+     в web/legal/<документ>.<язык>.html и подставляется ниже по тексту.
+     ВНИМАНИЕ: не писать здесь ключи в двойных фигурных скобках — сборка подставит
+     их и внутри комментария, разорвав разметку страницы. -->
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{page.title}}</title>
+<meta name="description" content="{{page.desc}}">
+<meta name="theme-color" content="#12151a">
+<!-- юридические страницы в поиске не нужны, но индексация ссылок с них — да -->
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="{{canonical}}">
+{{alternates}}
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%2312151a'/><text y='68' x='50' text-anchor='middle' font-size='58' font-family='Georgia,serif' fill='%23c9a961'>G</text></svg>">
+</head>
+<body class="legal-page">
+
+<header class="nav solid">
+  <div class="wrap nav-in">
+    <a href="/{{lang}}/" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
+    <div class="nav-cta">
+      {{lang_switch}}
+      <a href="/{{lang}}/" class="btn btn-ghost btn-sm">{{legal.back}}</a>
+    </div>
+  </div>
+</header>
+
+<main class="legal">
+  <div class="wrap legal-in">
+    <p class="eyebrow">{{legal.eyebrow}}</p>
+    <h1>{{page.h1}}</h1>
+    <p class="legal-updated">{{legal.updated_label}}: {{co.updated}}</p>
+
+    {{legal_body}}
+
+    <p class="legal-back"><a href="/{{lang}}/">← {{legal.back}}</a></p>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <div>
+      <a href="/{{lang}}/" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
+      <p class="foot-txt">{{foot.txt}}</p>
+    </div>
+    <nav class="foot-links">
+      <a href="/{{lang}}/#catalog">{{nav.catalog}}</a>
+      <a href="/{{lang}}/#services">{{nav.services}}</a>
+      <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
+      <a href="/{{lang}}/privacy/">{{legal.privacy_short}}</a>
+      <a href="/{{lang}}/terms/">{{legal.terms_short}}</a>
+    </nav>
+    <div class="foot-staff">
+      <a href="https://office.galery.uz" class="btn btn-ghost btn-sm">{{foot.staff_btn}}</a>
+      <p class="foot-note">{{foot.staff_note}}</p>
+    </div>
+  </div>
+  <div class="wrap copyright">
+    <span>© <span id="yr">2026</span> Galereya Best. {{foot.rights}}</span>
+  </div>
+</footer>
+
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+document.querySelectorAll('.langs a').forEach(function(a){
+  a.addEventListener('click', function(){
+    document.cookie = 'lang=' + a.getAttribute('hreflang') +
+                      ';path=/;max-age=31536000;samesite=Lax';
+  });
+});
+</script>
+</body>
+</html>

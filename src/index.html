@@ -1,0 +1,352 @@
+<!doctype html>
+<!-- Шаблон публичного сайта. Текст сюда не пишем — только ключи {{...}},
+     значения лежат в web/i18n/<язык>.json. Сборка: web/build.py -->
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{meta.title}}</title>
+<meta name="description" content="{{meta.desc}}">
+<meta name="theme-color" content="#12151a">
+<meta property="og:title" content="{{meta.og_title}}">
+<meta property="og:description" content="{{meta.og_desc}}">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="{{meta.og_locale}}">
+<meta property="og:url" content="{{canonical}}">
+<link rel="canonical" href="{{canonical}}">
+{{alternates}}
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%2312151a'/><text y='68' x='50' text-anchor='middle' font-size='58' font-family='Georgia,serif' fill='%23c9a961'>G</text></svg>">
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="#top" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
+    <nav class="nav-links">
+      <a href="#catalog">{{nav.catalog}}</a>
+      <a href="#brands">{{nav.brands}}</a>
+      <a href="#services">{{nav.services}}</a>
+      <a href="#about">{{nav.about}}</a>
+      <a href="#contacts">{{nav.contacts}}</a>
+    </nav>
+    <div class="nav-cta">
+      {{lang_switch}}
+      <a href="#contacts" class="btn btn-gold">{{nav.cta}}</a>
+      <button class="burger" id="burger" aria-label="{{nav.menu_aria}}"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ГЕРОЙ -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="wrap hero-in">
+    <p class="eyebrow">{{hero.eyebrow}}</p>
+    <h1>{{!hero.h1}}</h1>
+    <p class="lead">{{hero.lead}}</p>
+    <div class="hero-btns">
+      <a href="#catalog" class="btn btn-gold btn-lg">{{hero.btn_catalog}}</a>
+      <a href="#contacts" class="btn btn-ghost btn-lg">{{hero.btn_consult}}</a>
+    </div>
+    <div class="hero-stats">
+      <div><b>{{hero.s1_v}}</b><span>{{hero.s1_l}}</span></div>
+      <div><b>{{hero.s2_v}}</b><span>{{hero.s2_l}}</span></div>
+      <div><b>{{hero.s3_v}}</b><span>{{hero.s3_l}}</span></div>
+    </div>
+  </div>
+  <a href="#catalog" class="scroll-hint" aria-label="{{hero.scroll_aria}}"></a>
+</section>
+
+<!-- КАТАЛОГ -->
+<section class="section" id="catalog">
+  <div class="wrap">
+    <p class="eyebrow center">{{cat.eyebrow}}</p>
+    <h2 class="center">{{!cat.h2}}</h2>
+    <p class="sub center">{{cat.sub}}</p>
+
+    <div class="cards">
+      <article class="card">
+        <div class="card-ico">◲</div>
+        <h3>{{cat.c1_t}}</h3>
+        <p>{{cat.c1_d}}</p>
+        <p class="tags">IDEAL · NMC · PRIME DECOR · TRIM LINE · MARBET</p>
+      </article>
+
+      <article class="card">
+        <div class="card-ico">▤</div>
+        <h3>{{cat.c2_t}}</h3>
+        <p>{{cat.c2_d}}</p>
+        <p class="tags">ART FLOOR · EGGER</p>
+      </article>
+
+      <article class="card">
+        <div class="card-ico">▥</div>
+        <h3>{{cat.c3_t}}</h3>
+        <p>{{cat.c3_d}}</p>
+        <p class="tags">DELUX · JINHAO Bamboo · ART DECO</p>
+      </article>
+
+      <article class="card">
+        <div class="card-ico">◈</div>
+        <h3>{{cat.c4_t}}</h3>
+        <p>{{cat.c4_d}}</p>
+        <p class="tags">SIRCA · ASMACO · TITAN</p>
+      </article>
+
+      <article class="card">
+        <div class="card-ico">◍</div>
+        <h3>{{cat.c5_t}}</h3>
+        <p>{{cat.c5_d}}</p>
+        <p class="tags">WASSERMANN · RVK</p>
+      </article>
+
+      <article class="card">
+        <div class="card-ico">▭</div>
+        <h3>{{cat.c6_t}}</h3>
+        <p>{{cat.c6_d}}</p>
+        <p class="tags">{{cat.c6_tags}}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- БРЕНДЫ -->
+<section class="section section-dark" id="brands">
+  <div class="wrap">
+    <p class="eyebrow center">{{brands.eyebrow}}</p>
+    <h2 class="center">{{!brands.h2}}</h2>
+    <p class="sub center">{{brands.sub}}</p>
+    <div class="brands">
+      <span>IDEAL</span><span>ART FLOOR</span><span>NMC</span><span>EGGER</span>
+      <span>SIRCA</span><span>DELUX</span><span>PRIME DECOR</span><span>MARBET</span>
+      <span>WASSERMANN</span><span>ASMACO</span><span>TRIM LINE</span><span>ART DECO</span>
+      <span>RVK</span><span>JINHAO</span><span>RUDA</span><span>TITAN</span>
+    </div>
+  </div>
+</section>
+
+<!-- УСЛУГИ -->
+<section class="section" id="services">
+  <div class="wrap">
+    <p class="eyebrow center">{{srv.eyebrow}}</p>
+    <h2 class="center">{{!srv.h2}}</h2>
+    <div class="feats">
+      <div class="feat">
+        <h3>{{srv.f1_t}}</h3>
+        <p>{{srv.f1_d}}</p>
+      </div>
+      <div class="feat">
+        <h3>{{srv.f2_t}}</h3>
+        <p>{{srv.f2_d}}</p>
+      </div>
+      <div class="feat">
+        <h3>{{srv.f3_t}}</h3>
+        <p>{{srv.f3_d}}</p>
+      </div>
+      <div class="feat">
+        <h3>{{srv.f4_t}}</h3>
+        <p>{{srv.f4_d}}</p>
+      </div>
+      <div class="feat">
+        <h3>{{srv.f5_t}}</h3>
+        <p>{{srv.f5_d}}</p>
+      </div>
+      <div class="feat">
+        <h3>{{srv.f6_t}}</h3>
+        <p>{{srv.f6_d}}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- О КОМПАНИИ -->
+<section class="section section-alt" id="about">
+  <div class="wrap about-grid">
+    <div>
+      <p class="eyebrow">{{about.eyebrow}}</p>
+      <h2>Galereya <em>Best</em></h2>
+      <p class="big">{{about.big}}</p>
+      <p>{{about.p2}}</p>
+      <p>{{about.p3}}</p>
+    </div>
+    <div class="about-side">
+      <div class="stat"><b>{{about.s1_v}}</b><span>{{about.s1_l}}</span></div>
+      <div class="stat"><b>{{about.s2_v}}</b><span>{{about.s2_l}}</span></div>
+      <div class="stat"><b>{{about.s3_v}}</b><span>{{about.s3_l}}</span></div>
+      <div class="stat"><b>{{about.s4_v}}</b><span>{{about.s4_l}}</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- КОНТАКТЫ -->
+<section class="section section-dark" id="contacts">
+  <div class="wrap">
+    <p class="eyebrow center">{{con.eyebrow}}</p>
+    <h2 class="center">{{!con.h2}}</h2>
+    <p class="sub center">{{con.sub}}</p>
+
+    <div class="contact-wrap">
+
+      <div class="contacts-col">
+        <div class="contact-card">
+          <span class="c-lbl">{{con.addr_lbl}}</span>
+          <span class="c-val">{{con.addr_val}}</span>
+          <span class="c-note">{{con.addr_note}}</span>
+        </div>
+        <div class="contact-card">
+          <span class="c-lbl">{{con.hours_lbl}}</span>
+          <span class="c-val">{{con.hours_val}}</span>
+          <span class="c-note">{{con.hours_note}}</span>
+        </div>
+        <div class="contact-card">
+          <span class="c-lbl">{{con.phone_lbl}}</span>
+          <a class="c-val js-fill" href="tel:">+998 (__) ___-__-__</a>
+          <span class="c-note">{{con.phone_note}}</span>
+        </div>
+      </div>
+
+      <!-- ФОРМА ЗАЯВКИ -->
+      <div class="form-card">
+        <h3>{{form.h3}}</h3>
+        <p class="form-sub">{{form.sub}}</p>
+
+        <form id="leadForm" novalidate>
+          <div class="fld">
+            <label for="f-name">{{form.name_lbl}} <i>*</i></label>
+            <input id="f-name" name="name" required maxlength="120" autocomplete="name" placeholder="{{form.name_ph}}">
+          </div>
+          <div class="fld">
+            <label for="f-phone">{{form.phone_lbl}} <i>*</i></label>
+            <input id="f-phone" name="phone" required maxlength="60" type="tel" autocomplete="tel" placeholder="{{form.phone_ph}}">
+          </div>
+          <div class="fld">
+            <label for="f-msg">{{form.msg_lbl}}</label>
+            <textarea id="f-msg" name="message" rows="3" maxlength="2000" placeholder="{{form.msg_ph}}"></textarea>
+          </div>
+          <!-- язык страницы: менеджер увидит его в задаче и ответит на нём же -->
+          <input type="hidden" name="lang" value="{{lang}}">
+          <!-- ловушка для ботов: живой человек это поле не видит и не заполняет -->
+          <div class="hp" aria-hidden="true">
+            <label for="f-company">{{form.company_lbl}}</label>
+            <input id="f-company" name="company" tabindex="-1" autocomplete="off">
+          </div>
+          <!-- Согласие на обработку данных: по закону РУз о персональных данных
+               оно должно быть явным действием, а не мелким текстом под кнопкой. -->
+          <label class="consent">
+            <input type="checkbox" id="f-consent" name="consent" value="yes" required>
+            <span>{{!form.consent}}</span>
+          </label>
+          <button type="submit" class="btn btn-gold btn-lg" id="leadBtn">{{form.submit}}</button>
+          <p class="form-note" id="leadMsg" role="status"></p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <div>
+      <a href="#top" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
+      <p class="foot-txt">{{foot.txt}}</p>
+    </div>
+    <nav class="foot-links">
+      <a href="#catalog">{{nav.catalog}}</a>
+      <a href="#brands">{{nav.brands}}</a>
+      <a href="#services">{{nav.services}}</a>
+      <a href="#about">{{nav.about}}</a>
+      <a href="#contacts">{{nav.contacts}}</a>
+      <a href="/{{lang}}/privacy/">{{legal.privacy_short}}</a>
+      <a href="/{{lang}}/terms/">{{legal.terms_short}}</a>
+    </nav>
+    <div class="foot-staff">
+      <a href="https://office.galery.uz" class="btn btn-ghost btn-sm">{{foot.staff_btn}}</a>
+      <p class="foot-note">{{foot.staff_note}}</p>
+    </div>
+  </div>
+  <div class="wrap copyright">
+    <span>© <span id="yr">2026</span> Galereya Best. {{foot.rights}}</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  var nav = document.getElementById('nav');
+  var onScroll = function(){ nav.classList.toggle('solid', window.scrollY > 30); };
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+  document.getElementById('burger').addEventListener('click', function(){
+    nav.classList.toggle('open');
+  });
+  document.querySelectorAll('.nav-links a').forEach(function(a){
+    a.addEventListener('click', function(){ nav.classList.remove('open'); });
+  });
+
+  // ---- выбор языка ----
+  // Запоминаем выбор в cookie: по ней nginx на следующий заход с корня galery.uz
+  // отдаст ту же версию, не глядя на страну по IP.
+  document.querySelectorAll('.langs a').forEach(function(a){
+    a.addEventListener('click', function(){
+      document.cookie = 'lang=' + a.getAttribute('hreflang') +
+                        ';path=/;max-age=31536000;samesite=Lax';
+    });
+  });
+
+  // ---- форма заявки ----
+  var T = {
+    required: {{js.err_required}},
+    consent:  {{js.err_consent}},
+    sending:  {{js.sending}},
+    ok:       {{js.ok}},
+    fail:     {{js.fail}},
+    neterr:   {{js.neterr}}
+  };
+  var form = document.getElementById('leadForm');
+  if (form){
+    var btn = document.getElementById('leadBtn'), out = document.getElementById('leadMsg');
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var name = form.name.value.trim(), phone = form.phone.value.trim();
+      out.className = 'form-note';
+      if (!name || !phone){ out.classList.add('err'); out.textContent = T.required; return; }
+      if (!form.consent.checked){ out.classList.add('err'); out.textContent = T.consent; return; }
+      btn.disabled = true; var old = btn.textContent; btn.textContent = T.sending;
+      fetch('/api/contact', {
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body: new URLSearchParams(new FormData(form)).toString()
+      })
+      .then(function(r){ return r.json().then(function(j){ return {s:r.status, j:j}; }); })
+      .then(function(res){
+        if (res.j && res.j.ok){
+          form.reset();
+          out.classList.add('ok');
+          out.textContent = T.ok;
+        } else {
+          out.classList.add('err');
+          out.textContent = T.fail;
+        }
+      })
+      .catch(function(){
+        out.classList.add('err');
+        out.textContent = T.neterr;
+      })
+      .finally(function(){ btn.disabled = false; btn.textContent = old; });
+    });
+  }
+
+  // плавное появление секций
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(es){
+      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {threshold:0.12});
+    document.querySelectorAll('.card,.feat,.stat,.contact-card,.about-grid > div').forEach(function(el){
+      el.classList.add('rise'); io.observe(el);
+    });
+  }
+})();
+</script>
+</body>
+</html>
