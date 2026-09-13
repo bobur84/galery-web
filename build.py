@@ -203,6 +203,21 @@ def main():
               % (UNSET, ", ".join(unset)), file=sys.stderr)
 
     shutil.copytree(HERE / "css", out / "css")
+
+    # Каталог бренда NMC: генерируем страницу и кладём её + ассеты в dist/nmc/.
+    # Данные — снимок ассортимента web/nmc/page_data.json (что продавалось за 365 дней).
+    nmc_src = HERE / "nmc"
+    if (nmc_src / "gen_nmc.py").exists() and (nmc_src / "page_data.json").exists():
+        import subprocess
+        subprocess.run([sys.executable, str(nmc_src / "gen_nmc.py")], check=True)
+        (out / "nmc" / "assets").mkdir(parents=True, exist_ok=True)
+        shutil.copy(nmc_src / "index.html", out / "nmc" / "index.html")
+        for asset in (nmc_src / "assets").iterdir():
+            if asset.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
+                shutil.copy(asset, out / "nmc" / "assets" / asset.name)
+        print("  каталог NMC: dist/nmc/ (%d ассетов)"
+              % len(list((out / "nmc" / "assets").iterdir())))
+
     (out / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
     (out / "robots.txt").write_text(
         "User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n" % SITE, encoding="utf-8")
