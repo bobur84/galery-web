@@ -231,6 +231,19 @@ def main():
         print("  каталог PRIME DECOR: dist/primedecor/ (%d ассетов)"
               % len(list((out / "primedecor" / "assets").iterdir())))
 
+    # Каталог бренда MARBET (Marbet Design) — так же из снимка page_data.json.
+    mb_src = HERE / "marbet"
+    if (mb_src / "gen_marbet.py").exists() and (mb_src / "page_data.json").exists():
+        import subprocess
+        subprocess.run([sys.executable, str(mb_src / "gen_marbet.py")], check=True)
+        (out / "marbet" / "assets").mkdir(parents=True, exist_ok=True)
+        shutil.copy(mb_src / "index.html", out / "marbet" / "index.html")
+        for asset in (mb_src / "assets").iterdir():
+            if asset.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
+                shutil.copy(asset, out / "marbet" / "assets" / asset.name)
+        print("  каталог MARBET: dist/marbet/ (%d ассетов)"
+              % len(list((out / "marbet" / "assets").iterdir())))
+
     (out / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
     (out / "robots.txt").write_text(
         "User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n" % SITE, encoding="utf-8")
