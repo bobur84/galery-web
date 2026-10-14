@@ -218,6 +218,19 @@ def main():
         print("  каталог NMC: dist/nmc/ (%d ассетов)"
               % len(list((out / "nmc" / "assets").iterdir())))
 
+    # Каталог бренда PRIME DECOR (ПРАЙМДЕКОР, XPS) — так же из снимка page_data.json.
+    pd_src = HERE / "primedecor"
+    if (pd_src / "gen_primedecor.py").exists() and (pd_src / "page_data.json").exists():
+        import subprocess
+        subprocess.run([sys.executable, str(pd_src / "gen_primedecor.py")], check=True)
+        (out / "primedecor" / "assets").mkdir(parents=True, exist_ok=True)
+        shutil.copy(pd_src / "index.html", out / "primedecor" / "index.html")
+        for asset in (pd_src / "assets").iterdir():
+            if asset.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
+                shutil.copy(asset, out / "primedecor" / "assets" / asset.name)
+        print("  каталог PRIME DECOR: dist/primedecor/ (%d ассетов)"
+              % len(list((out / "primedecor" / "assets").iterdir())))
+
     (out / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
     (out / "robots.txt").write_text(
         "User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n" % SITE, encoding="utf-8")
