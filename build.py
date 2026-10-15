@@ -272,6 +272,20 @@ def main():
         print("  каталог TIM: dist/tim/ (%d ассетов)"
               % len(list((out / "tim" / "assets").iterdir())))
 
+    # Каталог бренда WASSERMANN (насосное оборудование) — сетка моделей с фото.
+    wm_src = HERE / "wassermann"
+    if (wm_src / "gen_wassermann.py").exists() and (wm_src / "page_data.json").exists():
+        import subprocess
+        subprocess.run([sys.executable, str(wm_src / "gen_wassermann.py")], check=True)
+        (out / "wassermann" / "assets").mkdir(parents=True, exist_ok=True)
+        shutil.copy(wm_src / "index.html", out / "wassermann" / "index.html")
+        if (wm_src / "assets").exists():
+            for asset in (wm_src / "assets").iterdir():
+                if asset.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
+                    shutil.copy(asset, out / "wassermann" / "assets" / asset.name)
+        print("  каталог WASSERMANN: dist/wassermann/ (%d ассетов)"
+              % len(list((out / "wassermann" / "assets").iterdir())))
+
     (out / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
     (out / "robots.txt").write_text(
         "User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n" % SITE, encoding="utf-8")
