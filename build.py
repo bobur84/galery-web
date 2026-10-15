@@ -244,6 +244,34 @@ def main():
         print("  каталог MARBET: dist/marbet/ (%d ассетов)"
               % len(list((out / "marbet" / "assets").iterdir())))
 
+    # Каталог бренда RVK (сантехника, PPR) — так же из снимка page_data.json.
+    rvk_src = HERE / "rvk"
+    if (rvk_src / "gen_rvk.py").exists() and (rvk_src / "page_data.json").exists():
+        import subprocess
+        subprocess.run([sys.executable, str(rvk_src / "gen_rvk.py")], check=True)
+        (out / "rvk" / "assets").mkdir(parents=True, exist_ok=True)
+        shutil.copy(rvk_src / "index.html", out / "rvk" / "index.html")
+        if (rvk_src / "assets").exists():
+            for asset in (rvk_src / "assets").iterdir():
+                if asset.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
+                    shutil.copy(asset, out / "rvk" / "assets" / asset.name)
+        print("  каталог RVK: dist/rvk/ (%d ассетов)"
+              % len(list((out / "rvk" / "assets").iterdir())))
+
+    # Каталог бренда TIM (сантехника) — категории с фото и списком товаров.
+    tim_src = HERE / "tim"
+    if (tim_src / "gen_tim.py").exists() and (tim_src / "page_data.json").exists():
+        import subprocess
+        subprocess.run([sys.executable, str(tim_src / "gen_tim.py")], check=True)
+        (out / "tim" / "assets").mkdir(parents=True, exist_ok=True)
+        shutil.copy(tim_src / "index.html", out / "tim" / "index.html")
+        if (tim_src / "assets").exists():
+            for asset in (tim_src / "assets").iterdir():
+                if asset.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
+                    shutil.copy(asset, out / "tim" / "assets" / asset.name)
+        print("  каталог TIM: dist/tim/ (%d ассетов)"
+              % len(list((out / "tim" / "assets").iterdir())))
+
     (out / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
     (out / "robots.txt").write_text(
         "User-agent: *\nAllow: /\nSitemap: %s/sitemap.xml\n" % SITE, encoding="utf-8")
