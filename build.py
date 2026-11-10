@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Сборка публичного сайта galery.uz на трёх языках.
 
-Из шаблонов web/src/*.html и словарей web/i18n/<язык>.json собирает готовые
-страницы в web/dist/<язык>/: главную, политику конфиденциальности и условия
+Из шаблонов src/*.html и словарей i18n/<язык>.json собирает готовые
+страницы в dist/<язык>/: главную, политику конфиденциальности и условия
 использования — по три версии каждой.
 
 Почему отдельные страницы на язык, а не подмена текста на JS:
@@ -11,16 +11,16 @@
   * посетителю не мигает чужой язык, пока грузится скрипт.
 
 Какой язык показать с корня galery.uz — решает nginx (страна по IP + cookie
-с выбором посетителя), см. deploy/nginx-report.conf.
+с выбором посетителя), см. deploy/nginx-report.conf в репозитории galereya-report.
 
-Зависимостей нет, только стандартная библиотека: скрипт запускается на сервере
-при деплое (deploy/deploy.sh).
+Зависимостей нет, только стандартная библиотека. Сборка идёт в GitHub Actions
+(.github/workflows/deploy.yml), на сервер уходит только готовый dist/.
 
 Плейсхолдеры в шаблонах и в текстах документов:
     {{ключ}}   — значение из словаря, экранируется (безопасно и в тексте, и в атрибуте)
     {{!ключ}}  — значение вставляется как есть (для строк с <em> и <br>)
     {{js.имя}} — строка form.<имя> в виде литерала JavaScript (в кавычках)
-Реквизиты компании (ключи co.*) — общие на все языки, лежат в web/company.json.
+Реквизиты компании (ключи co.*) — общие на все языки, лежат в company.json.
 """
 
 import argparse
@@ -35,12 +35,12 @@ SITE = "https://galery.uz"
 # Порядок = порядок кнопок в переключателе языков. Узбекский первым: это
 # государственный язык страны, где работает компания.
 # На выбор языка по стране этот список НЕ влияет — за него отвечает nginx
-# (карта $lang_by_country в deploy/nginx-report.conf).
+# (карта $lang_by_country в galereya-report/deploy/nginx-report.conf).
 LANGS = ["uz", "ru", "en"]
 LABELS = {"uz": "UZ", "ru": "RU", "en": "EN"}
 
 # Страницы сайта. slug — адрес внутри языка: "" это /ru/, "privacy" это /ru/privacy/.
-# doc — имя файла с текстом в web/legal/ (<doc>.<язык>.html); у главной его нет.
+# doc — имя файла с текстом в legal/ (<doc>.<язык>.html); у главной его нет.
 PAGES = [
     {"slug": "",        "template": "index.html", "doc": None},
     {"slug": "privacy", "template": "legal.html", "doc": "privacy"},
@@ -52,7 +52,7 @@ PLACEHOLDER = re.compile(r"\{\{(!?)([a-z][\w.]*)\}\}")
 # Ключи, которые вычисляет сама сборка. Это готовая разметка — не экранируются.
 GENERATED = {"lang", "canonical", "alternates", "lang_switch", "legal_body",
              "page.title", "page.desc", "page.h1"}
-# Заполняются вручную в web/company.json; пока не заполнены — сборка предупреждает.
+# Заполняются вручную в company.json; пока не заполнены — сборка предупреждает.
 UNSET = "— уточнить —"
 
 
@@ -199,92 +199,14 @@ def main():
     unset = sorted(k for k, v in company.items() if v == UNSET)
     if unset:
         print("\n  ! РЕКВИЗИТЫ НЕ ЗАПОЛНЕНЫ — на юридических страницах будет «%s»:\n"
-              "    %s\n    заполнить в web/company.json"
+              "    %s\n    заполнить в company.json"
               % (UNSET, ", ".join(unset)), file=sys.stderr)
 
     shutil.copytree(HERE / "css", out / "css")
 
-    # Каталог бренда NMC: генерируем страницу и кладём её + ассеты в dist/nmc/.
-    # Данные — снимок ассортимента web/nmc/page_data.json (что продавалось за 365 дней).
-    nmc_src = HERE / "nmc"
-    if (nmc_src / "gen_nmc.py").exists() and (nmc_src / "page_data.json").exists():
-        import subprocess
-        subprocess.run([sys.executable, str(nmc_src / "gen_nmc.py")], check=True)
-        (out / "nmc" / "assets").mkdir(parents=True, exist_ok=True)
-        shutil.copy(nmc_src / "index.html", out / "nmc" / "index.html")
-        for asset in (nmc_src / "assets").iterdir():
-            if asset.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
-                shutil.copy(asset, out / "nmc" / "assets" / asset.name)
-        print("  каталог NMC: dist/nmc/ (%d ассетов)"
-              % len(list((out / "nmc" / "assets").iterdir())))
-
-    # Каталог бренда PRIME DECOR (ПРАЙМДЕКОР, XPS) — так же из снимка page_data.json.
-    pd_src = HERE / "primedecor"
-    if (pd_src / "gen_primedecor.py").exists() and (pd_src / "page_data.json").exists():
-        import subprocess
-        subprocess.run([sys.executable, str(pd_src / "gen_primedecor.py")], check=True)
-        (out / "primedecor" / "assets").mkdir(parents=True, exist_ok=True)
-        shutil.copy(pd_src / "index.html", out / "primedecor" / "index.html")
-        for asset in (pd_src / "assets").iterdir():
-            if asset.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
-                shutil.copy(asset, out / "primedecor" / "assets" / asset.name)
-        print("  каталог PRIME DECOR: dist/primedecor/ (%d ассетов)"
-              % len(list((out / "primedecor" / "assets").iterdir())))
-
-    # Каталог бренда MARBET (Marbet Design) — так же из снимка page_data.json.
-    mb_src = HERE / "marbet"
-    if (mb_src / "gen_marbet.py").exists() and (mb_src / "page_data.json").exists():
-        import subprocess
-        subprocess.run([sys.executable, str(mb_src / "gen_marbet.py")], check=True)
-        (out / "marbet" / "assets").mkdir(parents=True, exist_ok=True)
-        shutil.copy(mb_src / "index.html", out / "marbet" / "index.html")
-        for asset in (mb_src / "assets").iterdir():
-            if asset.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
-                shutil.copy(asset, out / "marbet" / "assets" / asset.name)
-        print("  каталог MARBET: dist/marbet/ (%d ассетов)"
-              % len(list((out / "marbet" / "assets").iterdir())))
-
-    # Каталог бренда RVK (сантехника, PPR) — так же из снимка page_data.json.
-    rvk_src = HERE / "rvk"
-    if (rvk_src / "gen_rvk.py").exists() and (rvk_src / "page_data.json").exists():
-        import subprocess
-        subprocess.run([sys.executable, str(rvk_src / "gen_rvk.py")], check=True)
-        (out / "rvk" / "assets").mkdir(parents=True, exist_ok=True)
-        shutil.copy(rvk_src / "index.html", out / "rvk" / "index.html")
-        if (rvk_src / "assets").exists():
-            for asset in (rvk_src / "assets").iterdir():
-                if asset.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
-                    shutil.copy(asset, out / "rvk" / "assets" / asset.name)
-        print("  каталог RVK: dist/rvk/ (%d ассетов)"
-              % len(list((out / "rvk" / "assets").iterdir())))
-
-    # Каталог бренда TIM (сантехника) — категории с фото и списком товаров.
-    tim_src = HERE / "tim"
-    if (tim_src / "gen_tim.py").exists() and (tim_src / "page_data.json").exists():
-        import subprocess
-        subprocess.run([sys.executable, str(tim_src / "gen_tim.py")], check=True)
-        (out / "tim" / "assets").mkdir(parents=True, exist_ok=True)
-        shutil.copy(tim_src / "index.html", out / "tim" / "index.html")
-        if (tim_src / "assets").exists():
-            for asset in (tim_src / "assets").iterdir():
-                if asset.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
-                    shutil.copy(asset, out / "tim" / "assets" / asset.name)
-        print("  каталог TIM: dist/tim/ (%d ассетов)"
-              % len(list((out / "tim" / "assets").iterdir())))
-
-    # Каталог бренда WASSERMANN (насосное оборудование) — сетка моделей с фото.
-    wm_src = HERE / "wassermann"
-    if (wm_src / "gen_wassermann.py").exists() and (wm_src / "page_data.json").exists():
-        import subprocess
-        subprocess.run([sys.executable, str(wm_src / "gen_wassermann.py")], check=True)
-        (out / "wassermann" / "assets").mkdir(parents=True, exist_ok=True)
-        shutil.copy(wm_src / "index.html", out / "wassermann" / "index.html")
-        if (wm_src / "assets").exists():
-            for asset in (wm_src / "assets").iterdir():
-                if asset.suffix.lower() in (".png", ".jpg", ".jpeg", ".webp", ".svg"):
-                    shutil.copy(asset, out / "wassermann" / "assets" / asset.name)
-        print("  каталог WASSERMANN: dist/wassermann/ (%d ассетов)"
-              % len(list((out / "wassermann" / "assets").iterdir())))
+    # Каталоги брендов (/nmc/, /tim/, /rvk/ …) сюда НЕ входят: их собирает
+    # galereya-report из снимков базы (web/<бренд>/snapshot.py) и кладёт в
+    # /opt/report-web. nginx отдаёт их оттуда, а всё остальное — отсюда.
 
     (out / "sitemap.xml").write_text(sitemap(), encoding="utf-8")
     (out / "robots.txt").write_text(

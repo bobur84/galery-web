@@ -1,0 +1,12 @@
+name: check
+# Проверка сборки на каждой ветке и PR. Секретов не использует.
+on:
+  push:
+    branches-ignore: [ main ]
+  pull_request:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 build.py --out dist

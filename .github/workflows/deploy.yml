@@ -1,0 +1,29 @@
+name: deploy
+# Сайт собирается здесь, в GitHub Actions. На сервер уходит только готовый dist/
+# одним архивом. Ключ GALERY_DEPLOY_KEY на сервере ничего не умеет, кроме приёма
+# этого архива: ему жёстко назначена команда galery-site-receive (см.
+# galereya-report/deploy/galery-site-receive.sh). Ни shell, ни доступа к порталу,
+# базе или 1С у него нет.
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: python3 build.py --out dist
+      - name: Upload to VM
+        env:
+          KEY: ${{ secrets.GALERY_DEPLOY_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+          # Ключ сервера закреплён: подменённый хост не получит архив.
+          echo '35.198.97.186 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEP1wvTEm/AwtDfeqxhcObe5XYpOFvspH+f6VHjt5X6y' > ~/.ssh/known_hosts
+          tar -czf - -C dist . | ssh -o StrictHostKeyChecking=yes galeryweb@35.198.97.186
