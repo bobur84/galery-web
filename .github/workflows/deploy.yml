@@ -23,7 +23,11 @@ jobs:
           KEY: ${{ secrets.GALERY_DEPLOY_KEY }}
         run: |
           install -m 700 -d ~/.ssh
-          printf '%s\n' "$KEY" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+          [ -n "$KEY" ] || { echo "::error::Секрет GALERY_DEPLOY_KEY пуст или не найден (Settings → Secrets and variables → Actions → Repository secrets)"; exit 1; }
+          printf '%s\n' "$KEY" | tr -d '\r' > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+          # Отпечаток (публичная часть, не секрет) — чтобы сверить с galery-web-deploy.pub на сервере.
+          ssh-keygen -y -f ~/.ssh/id_ed25519 | ssh-keygen -lf - \
+            || { echo "::error::GALERY_DEPLOY_KEY — не приватный ключ OpenSSH (скопирован не тот текст?)"; exit 1; }
           # Ключ сервера закреплён: подменённый хост не получит архив.
           echo '35.198.97.186 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEP1wvTEm/AwtDfeqxhcObe5XYpOFvspH+f6VHjt5X6y' > ~/.ssh/known_hosts
           tar -czf - -C dist . | ssh -o StrictHostKeyChecking=yes galeryweb@35.198.97.186
