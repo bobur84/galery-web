@@ -21,6 +21,14 @@ python3 -m http.server -d dist 8000
 
 На Windows вместо `python3` пишите `python` (или `py`).
 
+Чтобы открывались и каталоги брендов (`/nmc/`, `/tim/` …), вместо `http.server`:
+```bash
+python3 build.py
+python3 tools/serve.py
+```
+Открыть http://127.0.0.1:8010/ru/. Каталоги берутся из `../galereya-report/web`
+(репозиторий рядом с этим); другой путь — вторым аргументом или в `GALEREYA_WEB`.
+
 ## Как вносить правки
 
 1. Ветка от `main`: `git checkout -b sayt/<что-делаем>`
