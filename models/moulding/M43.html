@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Молдинг M43</title>
+<style>
+:root{--bg:#e9ebf2;--fg:#1d2030;--panel:#ffffffcc}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161f;--fg:#e8eaf3;--panel:#232636cc}}
+:root[data-theme="dark"]{--bg:#14161f;--fg:#e8eaf3;--panel:#232636cc}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+#c{display:block;width:100%;height:100%}
+#ui{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center;background:var(--panel);backdrop-filter:blur(8px);padding:8px 14px;border-radius:12px;font-size:14px;max-width:max-content;margin:auto}
+#ui label{display:flex;gap:6px;align-items:center}
+#pv,#pv0,#pv2{font:inherit;color:var(--fg);background:transparent;border:1px solid currentColor;border-radius:8px;padding:4px 12px;cursor:pointer;min-height:32px}
+#ui input{width:32px;height:26px;border:0;padding:0;background:none}
+#hint{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:0;right:0;text-align:center;font-size:13px;opacity:.7;pointer-events:none}
+html,body{background:#fff}#hint{color:#444}#info{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:18px;color:#1d2030;pointer-events:none;line-height:1.2}#info b{display:block;font-size:26px;letter-spacing:.2px}#info span{display:block;margin-top:4px;font-size:15px;opacity:.75}
+</style>
+<canvas id="c"></canvas>
+<div id="info"><b>Молдинг</b><span>Trimline M43</span></div>
+<div id="hint">Вращайте мышью или пальцем · колесо — масштаб</div>
+<div id="ui">
+<label>Стены<input type="color" id="cw" value="#353b4b"></label>
+<label>Молдинг<input type="color" id="ck" value="#ffffff"></label>
+<button id="pv0" type="button">Вид карточки</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+function ear(P){const idx=P.map((_,i)=>i),res=[];const cr=(a,b,c)=>(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);const ins=(p,a,b,c)=>cr(a,b,p)>=-1e-12&&cr(b,c,p)>=-1e-12&&cr(c,a,p)>=-1e-12;let g=0;while(idx.length>3&&g++<5000){let ok=false;for(let k=0;k<idx.length;k++){const i0=idx[(k+idx.length-1)%idx.length],i1=idx[k],i2=idx[(k+1)%idx.length];const a=P[i0],b=P[i1],c=P[i2];if(cr(a,b,c)<=1e-12)continue;if(idx.some(j=>j!==i0&&j!==i1&&j!==i2&&ins(P[j],a,b,c)))continue;res.push([i0,i1,i2]);idx.splice(k,1);ok=true;break}if(!ok)break}res.push(idx.slice());return res}
+const cv=document.getElementById('c');
+const R=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+R.setPixelRatio(Math.min(Math.max(devicePixelRatio,2),3));R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
+const S=new THREE.Scene();S.background=new THREE.Color(0xffffff);
+const cam=new THREE.PerspectiveCamera(38,1,0.05,100);
+cam.position.set(0.617,0.564,0.458);
+const ctl=new THREE.OrbitControls(cam,cv);ctl.target.set(-0.08,0.47,0.05);ctl.enableDamping=true;ctl.enablePan=false;ctl.minAzimuthAngle=0;ctl.maxAzimuthAngle=Math.PI/2;ctl.minPolarAngle=Math.PI*0.33;ctl.maxPolarAngle=Math.PI*0.56;ctl.minDistance=0.3;ctl.maxDistance=1.2;
+const std=c=>new THREE.MeshStandardMaterial({color:c,roughness:.95});
+const mw=std(0x353b4b),mwe=std(0x4f5464);
+const mk=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.6,side:THREE.DoubleSide});
+mk.polygonOffset=true;mk.polygonOffsetFactor=1;mk.polygonOffsetUnits=1;
+const mkc=mk.clone();mkc.color.set(0xa8a8a8);
+const slab=(x0,x1,y0,y1,z0,z1,mats)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(x1-x0,y1-y0,z1-z0),mats);m.position.set((x0+x1)/2,(y0+y1)/2,(z0+z1)/2);m.receiveShadow=true;S.add(m);return m};
+
+/* ---------- Молдинг: кусок стены с выступом ----------
+   План сверху: стена по z=0, выступ NA..NB шириной и ND глубиной.
+   Молдинг идёт по стене, огибает выступ, на внешних углах запил 45°, на внутренних стык в ус. */
+const MH=0.9,MT=0.03,MY=0.45,OFF=0.0004;
+const WL=-0.45,WR=0.3,MR=0.18,NA=-0.12,NB=0.02,ND=0.06;
+slab(WL,WR,0,MH,-MT,0,[mwe,mwe,mwe,mwe,mw,mwe]);
+slab(NA,NB,0,MH,0,ND,[mw,mw,mwe,mwe,mw,mwe]).castShadow=true;
+/* сечение молдинга из STL: u — от стены (мм→м), v — вверх; задняя плоская сторона у стены, высота 25 мм */
+const PROFILE=[[0.00943,0.02181],[0.00942,0.02198],[0.00940,0.02215],[0.00937,0.02231],[0.00934,0.02247],[0.00929,0.02263],[0.00923,0.02279],[0.00915,0.02294],[0.00907,0.02309],[0.00897,0.02323],[0.00882,0.02342],[0.00862,0.02364],[0.00850,0.02376],[0.00830,0.02394],[0.00796,0.02421],[0.00715,0.02482],[0.00706,0.02487],[0.00696,0.02491],[0.00686,0.02494],[0.00666,0.02498],[0.00655,0.02499],[0.00634,0.02500],[0.00592,0.02499],[0.00009,0.02499],[0.00006,0.02418],[0.00002,0.02223],[0.00000,0.02174],[0.00000,0.02160],[0.00002,0.02149],[0.00006,0.02141],[0.00012,0.02133],[0.00016,0.02128],[0.00025,0.02120],[0.00047,0.02102],[0.00092,0.02073],[0.00111,0.02060],[0.00130,0.02044],[0.00138,0.02036],[0.00146,0.02027],[0.00152,0.02018],[0.00158,0.02007],[0.00163,0.01997],[0.00167,0.01985],[0.00169,0.01961],[0.00170,0.01927],[0.00169,0.01910],[0.00164,0.01895],[0.00158,0.01882],[0.00150,0.01870],[0.00140,0.01858],[0.00129,0.01845],[0.00104,0.01823],[0.00051,0.01781],[0.00042,0.01775],[0.00029,0.01768],[0.00026,0.01766],[0.00024,0.01762],[0.00021,0.01754],[0.00019,0.01736],[0.00016,0.01683],[0.00012,0.01552],[0.00011,0.01431],[0.00009,0.01236],[0.00008,0.00979],[0.00009,0.00001],[0.00067,0.00000],[0.00088,0.00000],[0.00110,0.00002],[0.00132,0.00005],[0.00153,0.00008],[0.00175,0.00013],[0.00196,0.00019],[0.00216,0.00027],[0.00236,0.00036],[0.00256,0.00046],[0.00274,0.00057],[0.00292,0.00070],[0.00308,0.00084],[0.00313,0.00092],[0.00318,0.00100],[0.00322,0.00108],[0.00326,0.00125],[0.00329,0.00142],[0.00329,0.00160],[0.00328,0.00188],[0.00326,0.00195],[0.00322,0.00209],[0.00314,0.00229],[0.00308,0.00242],[0.00293,0.00266],[0.00289,0.00274],[0.00287,0.00283],[0.00287,0.00292],[0.00288,0.00295],[0.00294,0.00303],[0.00317,0.00322],[0.00334,0.00339],[0.00348,0.00358],[0.00354,0.00368],[0.00360,0.00379],[0.00365,0.00390],[0.00369,0.00401],[0.00372,0.00412],[0.00375,0.00424],[0.00377,0.00436],[0.00377,0.00450],[0.00377,0.00463],[0.00376,0.00489],[0.00373,0.00514],[0.00371,0.00527],[0.00365,0.00552],[0.00357,0.00577],[0.00348,0.00599],[0.00334,0.00632],[0.00334,0.00638],[0.00334,0.00650],[0.00339,0.00657],[0.00346,0.00665],[0.00389,0.00707],[0.00414,0.00734],[0.00425,0.00749],[0.00436,0.00764],[0.00445,0.00779],[0.00453,0.00795],[0.00461,0.00811],[0.00467,0.00828],[0.00471,0.00846],[0.00474,0.00864],[0.00476,0.00883],[0.00474,0.00901],[0.00471,0.00917],[0.00466,0.00933],[0.00459,0.00947],[0.00452,0.00961],[0.00443,0.00974],[0.00433,0.00986],[0.00423,0.00999],[0.00400,0.01022],[0.00352,0.01067],[0.00334,0.01082],[0.00327,0.01087],[0.00311,0.01095],[0.00300,0.01103],[0.00291,0.01112],[0.00284,0.01120],[0.00281,0.01139],[0.00279,0.01164],[0.00282,0.01261],[0.00284,0.01291],[0.00288,0.01319],[0.00293,0.01347],[0.00300,0.01375],[0.00309,0.01401],[0.00319,0.01427],[0.00332,0.01452],[0.00346,0.01476],[0.00362,0.01500],[0.00381,0.01523],[0.00402,0.01545],[0.00414,0.01555],[0.00439,0.01576],[0.00478,0.01604],[0.00519,0.01630],[0.00602,0.01679],[0.00618,0.01690],[0.00628,0.01699],[0.00635,0.01708],[0.00643,0.01726],[0.00646,0.01747],[0.00649,0.01760],[0.00653,0.01772],[0.00659,0.01783],[0.00665,0.01794],[0.00673,0.01804],[0.00681,0.01814],[0.00700,0.01832],[0.00720,0.01848],[0.00785,0.01900],[0.00807,0.01919],[0.00828,0.01938],[0.00848,0.01958],[0.00867,0.01979],[0.00884,0.02001],[0.00899,0.02024],[0.00913,0.02048],[0.00924,0.02074],[0.00933,0.02101],[0.00940,0.02130],[0.00942,0.02164]];
+function sampleProfile(){return PROFILE}
+function prep(P){
+ let a=0;for(let i=0;i<P.length;i++){const p=P[i],q=P[(i+1)%P.length];a+=p[0]*q[1]-q[0]*p[1]}
+ const pp=(a<0?P.slice().reverse():P.slice()).map(p=>[p[0]+OFF,p[1]]);
+ const k=pp.length,e=[];
+ for(let i=0;i<k;i++){const p=pp[i],q=pp[(i+1)%k],dx=q[0]-p[0],dy=q[1]-p[1],l=Math.hypot(dx,dy)||1;e.push([dy/l,-dx/l])}
+ const vv=(i,j)=>{const a=e[(i+k-1)%k],b=e[i%k],d=a[0]*b[0]+a[1]*b[1];if(d<0.8)return e[j];const x=a[0]+b[0],y=a[1]+b[1],l=Math.hypot(x,y)||1;return[x/l,y/l]};
+ return{pts:pp,n:k,en:e,vv:vv}}
+/* V — точки пути на поверхности стены [x,z], Nrm — наружные нормали сегментов [x,z] */
+function buildMold(P,V,Nrm,y0){
+ const pr=prep(P),pp=pr.pts,k=pr.n,ns=Nrm.length,out=[],tris=ear(pp);
+ const mv=[];
+ for(let i=0;i<=ns;i++){
+  if(i===0)mv.push(Nrm[0]);
+  else if(i===ns)mv.push(Nrm[ns-1]);
+  else{const a=Nrm[i-1],b=Nrm[i],f=1+a[0]*b[0]+a[1]*b[1];mv.push([(a[0]+b[0])/f,(a[1]+b[1])/f])}}
+ const rings=mv.map((m,i)=>pp.map(p=>[V[i][0]+p[0]*m[0],y0+p[1],V[i][1]+p[0]*m[1]]));
+ for(let s=0;s<ns;s++){
+  const pos=[],nor=[],idx=[],N=Nrm[s],R0=rings[s],R1=rings[s+1];
+  const nn=q=>[q[0]*N[0],q[1],q[0]*N[1]];
+  for(let e=0;e<k;e++){const i=e,j=(e+1)%k,b=pos.length/3;
+   pos.push(...R0[i],...R0[j],...R1[i],...R1[j]);
+   const na=nn(pr.vv(i,e)),nb=nn(pr.vv(j,e));
+   nor.push(...na,...nb,...na,...nb);
+   idx.push(b,b+1,b+2,b+1,b+3,b+2)}
+  const nS=idx.length;
+  let dx=V[s+1][0]-V[s][0],dz=V[s+1][1]-V[s][1];const dl=Math.hypot(dx,dz)||1;dx/=dl;dz/=dl;
+  const cap=(Rg,sg)=>tris.forEach(t=>{const b=pos.length/3;t.forEach(i=>{pos.push(...Rg[i]);nor.push(sg*dx,0,sg*dz)});idx.push(b,b+1,b+2)});
+  if(s===0)cap(R0,-1);
+  if(s===ns-1)cap(R1,1);
+  for(let t=0;t<idx.length;t+=3){const a=idx[t],b=idx[t+1],c=idx[t+2];const ux=pos[b*3]-pos[a*3],uy=pos[b*3+1]-pos[a*3+1],uz=pos[b*3+2]-pos[a*3+2],vx=pos[c*3]-pos[a*3],vy=pos[c*3+1]-pos[a*3+1],vz=pos[c*3+2]-pos[a*3+2];const nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;if(nx*nor[a*3]+ny*nor[a*3+1]+nz*nor[a*3+2]<0){idx[t+1]=c;idx[t+2]=b}}
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+  g.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
+  g.setIndex(idx);g.addGroup(0,nS,0);if(idx.length>nS)g.addGroup(nS,idx.length-nS,1);
+  const mm=new THREE.Mesh(g,[mk,mkc]);mm.castShadow=(s%2===0);out.push(mm)}
+ return out}
+const PATH=[[WL,0],[NA,0],[NA,ND],[NB,ND],[NB,0],[MR,0]];
+const NRMS=[[0,1],[-1,0],[0,1],[1,0],[0,1]];
+buildMold(sampleProfile(),PATH,NRMS,MY).forEach(o=>S.add(o));
+
+S.add(new THREE.HemisphereLight(0xffffff,0x6a6f85,.5));
+/* свет 5: справа и ниже, косой свет вдоль стены */
+const dl=new THREE.DirectionalLight(0xffffff,.6);dl.position.set(1.6,1.0,2.2);dl.target.position.set(-0.08,0.45,0);S.add(dl.target);dl.castShadow=true;const SM=Math.min(4096,R.capabilities.maxTextureSize||2048);dl.shadow.mapSize.set(SM,SM);R.shadowMap.autoUpdate=false;R.shadowMap.needsUpdate=true;dl.shadow.bias=-0.0004;dl.shadow.normalBias=0.001;Object.assign(dl.shadow.camera,{left:-0.5,right:0.5,top:0.5,bottom:-0.5,near:0.5,far:6});dl.shadow.camera.updateProjectionMatrix();S.add(dl);
+const dl2=new THREE.DirectionalLight(0xffffff,.1);dl2.position.set(3,2,1);S.add(dl2);
+/* вид на профиль: камера плавно подъезжает к торцу молдинга и обратно */
+const PH=Math.max(...PROFILE.map(p=>p[1])),PD=Math.max(...PROFILE.map(p=>p[0])),PK=PH*4.4;
+const VOV={p:cam.position.clone(),t:ctl.target.clone()};
+const VPR={t:new THREE.Vector3(MR,MY+PH/2,PD/2+OFF)};VPR.p=VPR.t.clone().add(new THREE.Vector3(.9395,.094,.3288).multiplyScalar(PK));
+const VCD={p:new THREE.Vector3(0.302,0.474,0.043),t:new THREE.Vector3(0.103,0.4697,0.0229)};
+let tw=null;
+function goView(V,done){tw={t0:performance.now(),p0:cam.position.clone(),q0:ctl.target.clone(),V:V,done:done};ctl.minDistance=.03;ctl.maxDistance=1.2}
+const lim=(a,b)=>()=>{ctl.minDistance=a;ctl.maxDistance=b};
+let inCard=false;const pvb=document.getElementById('pv0');
+pvb.onclick=()=>{if(tw)return;if(!inCard){inCard=true;pvb.textContent='Общий вид';goView(VCD,lim(.03,.5))}else{inCard=false;pvb.textContent='Вид карточки';goView(VOV,lim(.3,1.2))}};
+const hex=v=>new THREE.Color(v);
+cw.oninput=e=>mw.color=hex(e.target.value);ck.oninput=e=>{mk.color=hex(e.target.value)};
+function rs(){const w=innerWidth,h=innerHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+addEventListener('resize',rs);rs();
+(function loop(){if(tw){const k=Math.min(1,(performance.now()-tw.t0)/900),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;cam.position.lerpVectors(tw.p0,tw.V.p,e);ctl.target.lerpVectors(tw.q0,tw.V.t,e);if(k>=1){const d=tw.done;tw=null;if(d)d()}}ctl.update();R.render(S,cam);requestAnimationFrame(loop)})();
+</script>

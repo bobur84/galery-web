@@ -1,0 +1,206 @@
+<!doctype html>
+<!-- 3D-каталог TRIMLINE: отдельная страница, на главной 3D больше не грузится. -->
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{page.title}}</title>
+<meta name="description" content="{{page.desc}}">
+<meta name="theme-color" content="#2445c8">
+<link rel="canonical" href="{{canonical}}">
+{{alternates}}
+<link rel="stylesheet" href="/css/home.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232445c8'/><text y='70' x='50' text-anchor='middle' font-size='62' font-weight='800' font-family='Segoe UI,Arial,sans-serif' fill='%23ffffff'>G</text></svg>">
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<header class="nav solid" id="nav" data-solid>
+  <div class="wrap nav-in">
+    <a href="/{{lang}}/" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
+    <nav class="nav-links">
+      <a href="/{{lang}}/#catalog">{{nav.directions}}</a>
+      <a href="/{{lang}}/#brands">{{nav.brands}}</a>
+      <a href="/{{lang}}/#services">{{nav.services}}</a>
+      <a href="/{{lang}}/#about">{{nav.about}}</a>
+      <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
+    </nav>
+    <div class="nav-cta">
+      {{lang_switch}}
+      <a href="/{{lang}}/#contacts" class="btn">{{nav.cta}}</a>
+      <button class="burger" id="burger" aria-label="{{nav.menu_aria}}"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main class="page-top">
+  <section class="section" id="showroom" style="padding-top:40px">
+    <div class="wrap">
+      <p class="crumbs" style="color:var(--muted)"><a href="/{{lang}}/">{{legal.back}}</a><span>/</span><a href="/{{lang}}/plintusy/">{{cat.c1_t}}</a></p>
+      <div class="head">
+        <p class="eyebrow"><span class="num">3D</span>{{show.eyebrow}}</p>
+        <h2>{{!show.h2}}</h2>
+        <p class="sub">{{show.sub}}</p>
+      </div>
+
+    <div class="show-grid">
+      <div class="show-tabs" role="tablist" aria-label="{{show.tabs_aria}}">
+        <button class="show-tab on" role="tab" aria-selected="true" data-type="moulding">
+          <span class="st-n">01</span>
+          <span class="st-t">{{show.t1}}</span>
+          <span class="st-code"><span class="st-cur">Trimline M21 · 25×14×2400 mm</span><span class="st-cnt">{{show.count}} 18</span></span>
+          <span class="st-d">{{show.d1}}</span>
+        </button>
+        <button class="show-tab" role="tab" aria-selected="false" data-type="panel">
+          <span class="st-n">02</span>
+          <span class="st-t">{{show.t2}}</span>
+          <span class="st-code"><span class="st-cur">Trimline W9</span><span class="st-cnt">{{show.count}} 10</span></span>
+          <span class="st-d">{{show.d2}}</span>
+        </button>
+        <button class="show-tab" role="tab" aria-selected="false" data-type="plinth">
+          <span class="st-n">03</span>
+          <span class="st-t">{{show.t3}}</span>
+          <span class="st-code"><span class="st-cur">Trimline P7</span><span class="st-cnt">{{show.count}} 11</span></span>
+          <span class="st-d">{{show.d3}}</span>
+        </button>
+        <button class="show-tab" role="tab" aria-selected="false" data-type="cornice">
+          <span class="st-n">04</span>
+          <span class="st-t">{{show.t4}}</span>
+          <span class="st-code"><span class="st-cur">Trimline C-3 · 220×92×2400 mm</span><span class="st-cnt">{{show.count}} 3</span></span>
+          <span class="st-d">{{show.d4}}</span>
+        </button>
+      </div>
+
+      <div class="show-stage">
+        <div class="show-frame">
+          <iframe id="showFrame" title="{{show.t1}}" tabindex="0"></iframe>
+          <div class="show-load off" id="showLoad">{{show.loading}}</div>
+          <!-- Заставка: 3D не грузится, пока посетитель сам не выберет модель -->
+          <button type="button" class="show-cover" id="showCover">
+            <span class="sc-brand">TRIMLINE</span>
+            <span class="sc-code" id="showCoverCode">M21</span>
+            <span class="sc-btn">{{show.open}}</span>
+          </button>
+        </div>
+        <div class="show-pick">
+          <span class="show-pick-lbl">{{show.pick}}</span>
+          <div class="chips" data-type="moulding"><button type="button" class="chip" data-src="/models/moulding/M11.html" data-code="M11" data-size="25×12×2400 mm">M11</button><button type="button" class="chip" data-src="/models/moulding/M12.html" data-code="M12" data-size="">M12</button><button type="button" class="chip" data-src="/models/moulding/M13.html" data-code="M13" data-size="">M13</button><button type="button" class="chip on" data-src="/models/moulding/M21.html" data-code="M21" data-size="25×14×2400 mm">M21</button><button type="button" class="chip" data-src="/models/moulding/M22.html" data-code="M22" data-size="">M22</button><button type="button" class="chip" data-src="/models/moulding/M23.html" data-code="M23" data-size="">M23</button><button type="button" class="chip" data-src="/models/moulding/M31.html" data-code="M31" data-size="">M31</button><button type="button" class="chip" data-src="/models/moulding/M32.html" data-code="M32" data-size="">M32</button><button type="button" class="chip" data-src="/models/moulding/M33.html" data-code="M33" data-size="">M33</button><button type="button" class="chip" data-src="/models/moulding/M41.html" data-code="M41" data-size="">M41</button><button type="button" class="chip" data-src="/models/moulding/M42.html" data-code="M42" data-size="">M42</button><button type="button" class="chip" data-src="/models/moulding/M43.html" data-code="M43" data-size="">M43</button><button type="button" class="chip" data-src="/models/moulding/M51.html" data-code="M51" data-size="">M51</button><button type="button" class="chip" data-src="/models/moulding/M52.html" data-code="M52" data-size="">M52</button><button type="button" class="chip" data-src="/models/moulding/M53.html" data-code="M53" data-size="">M53</button><button type="button" class="chip" data-src="/models/moulding/M54.html" data-code="M54" data-size="">M54</button><button type="button" class="chip" data-src="/models/moulding/M55.html" data-code="M55" data-size="">M55</button><button type="button" class="chip" data-src="/models/moulding/M56.html" data-code="M56" data-size="">M56</button></div>
+          <div class="chips" data-type="panel" hidden><button type="button" class="chip" data-src="/models/panel/W1.html" data-code="W1" data-size="">W1</button><button type="button" class="chip" data-src="/models/panel/W2.html" data-code="W2" data-size="">W2</button><button type="button" class="chip" data-src="/models/panel/W3.html" data-code="W3" data-size="">W3</button><button type="button" class="chip" data-src="/models/panel/W4.html" data-code="W4" data-size="">W4</button><button type="button" class="chip" data-src="/models/panel/W5.html" data-code="W5" data-size="">W5</button><button type="button" class="chip" data-src="/models/panel/W6.html" data-code="W6" data-size="">W6</button><button type="button" class="chip" data-src="/models/panel/W7.html" data-code="W7" data-size="">W7</button><button type="button" class="chip" data-src="/models/panel/W8.html" data-code="W8" data-size="">W8</button><button type="button" class="chip on" data-src="/models/panel/W9.html" data-code="W9" data-size="">W9</button><button type="button" class="chip" data-src="/models/panel/W10.html" data-code="W10" data-size="">W10</button></div>
+          <div class="chips" data-type="plinth" hidden><button type="button" class="chip" data-src="/models/plinth/P1.html" data-code="P1" data-size="">P1</button><button type="button" class="chip" data-src="/models/plinth/P2.html" data-code="P2" data-size="">P2</button><button type="button" class="chip" data-src="/models/plinth/P3.html" data-code="P3" data-size="">P3</button><button type="button" class="chip" data-src="/models/plinth/P4.html" data-code="P4" data-size="">P4</button><button type="button" class="chip" data-src="/models/plinth/P5.html" data-code="P5" data-size="">P5</button><button type="button" class="chip" data-src="/models/plinth/P6.html" data-code="P6" data-size="">P6</button><button type="button" class="chip on" data-src="/models/plinth/P7.html" data-code="P7" data-size="">P7</button><button type="button" class="chip" data-src="/models/plinth/P8.html" data-code="P8" data-size="">P8</button><button type="button" class="chip" data-src="/models/plinth/P9.html" data-code="P9" data-size="">P9</button><button type="button" class="chip" data-src="/models/plinth/P10.html" data-code="P10" data-size="">P10</button><button type="button" class="chip" data-src="/models/plinth/P11.html" data-code="P11" data-size="">P11</button></div>
+          <div class="chips" data-type="cornice" hidden><button type="button" class="chip" data-src="/models/cornice/C-1.html" data-code="C-1" data-size="70×40×2400 mm">C-1</button><button type="button" class="chip" data-src="/models/cornice/C-2.html" data-code="C-2" data-size="71×41×2400 mm">C-2</button><button type="button" class="chip on" data-src="/models/cornice/C-3.html" data-code="C-3" data-size="220×92×2400 mm">C-3</button></div>
+        </div>
+        <div class="show-foot">
+          <span class="show-hint">{{show.hint}}</span>
+          <a id="showFull" class="btn btn-line-light btn-sm" href="/models/moulding/M21.html" target="_blank" rel="noopener">{{show.full}} ↗</a>
+        </div>
+        <p class="show-note">{{show.full_note}}</p>
+      </div>
+    </div>
+  </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <div>
+      <a href="/{{lang}}/" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
+      <p class="foot-txt">{{foot.txt}}</p>
+    </div>
+    <nav class="foot-links">
+      <a href="/{{lang}}/#catalog">{{nav.catalog}}</a>
+      <a href="/{{lang}}/#brands">{{nav.brands}}</a>
+      <a href="/{{lang}}/#services">{{nav.services}}</a>
+      <a href="/{{lang}}/#about">{{nav.about}}</a>
+      <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
+      <a href="/{{lang}}/privacy/">{{legal.privacy_short}}</a>
+      <a href="/{{lang}}/terms/">{{legal.terms_short}}</a>
+    </nav>
+    <div class="foot-staff">
+      <a href="https://office.galery.uz" class="btn btn-line-light btn-sm">{{foot.staff_btn}}</a>
+      <p class="foot-note">{{foot.staff_note}}</p>
+    </div>
+  </div>
+  <div class="wrap copyright">
+    <span>© <span id="yr">2026</span> Galereya Best. {{foot.rights}}</span>
+  </div>
+</footer>
+
+<script src="/js/site.js"></script>
+<script>
+(function(){
+  // ---- 3D-шоурум ----
+  // Слева — тип изделия, под окном — все модели этого типа. Пока посетитель не нажал
+  // на модель или на заставку, 3D не грузится вообще (на заставке — только надпись).
+  // Дальше модель всегда одна — чтобы не держать несколько WebGL-сцен сразу — и стоит
+  // на паузе, когда шоурум уходит с экрана. Свою панель управления модели внутри блока
+  // прячем; полная версия (с выбором цветов) открывается кнопкой в новой вкладке.
+  var frame = document.getElementById('showFrame'),
+      loader = document.getElementById('showLoad'),
+      cover = document.getElementById('showCover'),
+      coverCode = document.getElementById('showCoverCode'),
+      full = document.getElementById('showFull'),
+      tabs = document.querySelectorAll('.show-tab'),
+      sets = document.querySelectorAll('.chips'),
+      opened = false, paused = false, resumeFrame = function(){};
+  function clean(){
+    if (!opened) return;
+    try {
+      var d = frame.contentDocument, s = d.createElement('style');
+      s.textContent = '#ui,#bar,#hint,#info{display:none!important}';
+      d.head.appendChild(s);
+      frame.contentWindow.dispatchEvent(new Event('resize'));
+      var w = frame.contentWindow, raf = w.requestAnimationFrame.bind(w), wait = [];
+      w.requestAnimationFrame = function(cb){ if (paused){ wait.push(cb); return 0; } return raf(cb); };
+      resumeFrame = function(){ var q = wait; wait = []; q.forEach(function(cb){ raf(cb); }); };
+    } catch(e){}
+    loader.classList.add('off');
+  }
+  frame.addEventListener('load', clean);
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){
+      paused = !es[0].isIntersecting;
+      if (!paused) resumeFrame();
+    }).observe(document.querySelector('.show-frame'));
+  }
+  // выбрать модель; go = true — сразу открыть 3D (или если 3D уже открыт)
+  function pick(chip, go){
+    var set = chip.parentNode;
+    set.querySelectorAll('.chip').forEach(function(c){ c.classList.toggle('on', c === chip); });
+    var tab = document.querySelector('.show-tab[data-type="' + set.getAttribute('data-type') + '"]');
+    var code = chip.getAttribute('data-code'), size = chip.getAttribute('data-size'), src = chip.getAttribute('data-src');
+    tab.querySelector('.st-cur').textContent = 'Trimline ' + code + (size ? ' · ' + size : '');
+    coverCode.textContent = code;
+    full.href = src;
+    frame.title = tab.querySelector('.st-t').textContent + ' ' + code;
+    if (!go && !opened) return;
+    opened = true;
+    cover.classList.add('off');
+    loader.classList.remove('off');
+    frame.src = src;
+  }
+  function show(tab){
+    tabs.forEach(function(t){
+      var on = t === tab;
+      t.classList.toggle('on', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    var set;
+    sets.forEach(function(s){
+      var on = s.getAttribute('data-type') === tab.getAttribute('data-type');
+      s.hidden = !on; if (on) set = s;
+    });
+    pick(set.querySelector('.chip.on') || set.querySelector('.chip'), false);
+  }
+  tabs.forEach(function(t){ t.addEventListener('click', function(){ show(t); }); });
+  document.querySelectorAll('.chip').forEach(function(c){
+    c.addEventListener('click', function(){ pick(c, true); });
+  });
+  cover.addEventListener('click', function(){
+    var set = document.querySelector('.chips:not([hidden])');
+    pick(set.querySelector('.chip.on') || set.querySelector('.chip'), true);
+  });
+
+})();
+</script>
+</body>
+</html>

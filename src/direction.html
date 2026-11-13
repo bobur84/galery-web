@@ -1,0 +1,112 @@
+<!doctype html>
+<!-- Страница направления. Название, описание и бренды подставляет сборка (DIRECTIONS в build.py). -->
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{page.title}}</title>
+<meta name="description" content="{{page.desc}}">
+<meta name="theme-color" content="#2445c8">
+<link rel="canonical" href="{{canonical}}">
+{{alternates}}
+<link rel="stylesheet" href="/css/home.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232445c8'/><text y='70' x='50' text-anchor='middle' font-size='62' font-weight='800' font-family='Segoe UI,Arial,sans-serif' fill='%23ffffff'>G</text></svg>">
+</head>
+<body>
+<script>document.documentElement.classList.add('js')</script>
+
+<header class="nav solid" id="nav" data-solid>
+  <div class="wrap nav-in">
+    <a href="/{{lang}}/" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
+    <nav class="nav-links">
+      <a href="/{{lang}}/#catalog">{{nav.directions}}</a>
+      <a href="/{{lang}}/#brands">{{nav.brands}}</a>
+      <a href="/{{lang}}/#services">{{nav.services}}</a>
+      <a href="/{{lang}}/#about">{{nav.about}}</a>
+      <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
+    </nav>
+    <div class="nav-cta">
+      {{lang_switch}}
+      <a href="/{{lang}}/#contacts" class="btn">{{nav.cta}}</a>
+      <button class="burger" id="burger" aria-label="{{nav.menu_aria}}"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main class="{{dir.cls}}">
+  <section class="dhero">
+    <div class="wrap">
+      {{dir.icon}}
+      <p class="crumbs"><a href="/{{lang}}/">{{legal.back}}</a><span>/</span><a href="/{{lang}}/#catalog">{{nav.directions}}</a></p>
+      <p class="eyebrow"><span class="num">{{dir.n}}</span>{{dir.eyebrow}}</p>
+      <h1>{{dir.t}}</h1>
+      <p class="lead">{{dir.d}}</p>
+      <p class="tags">{{dir.tags}}</p>
+      <div class="hero-btns">
+        <a href="/{{lang}}/#contacts" class="btn btn-white btn-lg">{{hero.btn_consult}}</a>
+        <a href="#dir-brands" class="btn btn-line-light btn-lg">{{dir.brands}}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="dir-brands">
+    <div class="wrap">
+      <div class="head">
+        <h2>{{dir.brands}}</h2>
+        <p class="sub">{{dir.brands_sub}}</p>
+      </div>
+      <div class="brand-cards">
+        {{dir.brand_list}}
+      </div>
+    </div>
+  </section>
+
+  {{dir.extra}}
+
+  <section class="section section-paper">
+    <div class="wrap">
+      <div class="dcta">
+        <div><h2>{{dir.cta_h}}</h2><p>{{dir.cta_d}}</p></div>
+        <a href="/{{lang}}/#contacts" class="btn btn-ink btn-lg">{{nav.cta}}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head"><h2>{{dir.others}}</h2></div>
+      <div class="others">
+      {{dir.others_list}}
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <div>
+      <a href="/{{lang}}/" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
+      <p class="foot-txt">{{foot.txt}}</p>
+    </div>
+    <nav class="foot-links">
+      <a href="/{{lang}}/#catalog">{{nav.catalog}}</a>
+      <a href="/{{lang}}/#brands">{{nav.brands}}</a>
+      <a href="/{{lang}}/#services">{{nav.services}}</a>
+      <a href="/{{lang}}/#about">{{nav.about}}</a>
+      <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
+      <a href="/{{lang}}/privacy/">{{legal.privacy_short}}</a>
+      <a href="/{{lang}}/terms/">{{legal.terms_short}}</a>
+    </nav>
+    <div class="foot-staff">
+      <a href="https://office.galery.uz" class="btn btn-line-light btn-sm">{{foot.staff_btn}}</a>
+      <p class="foot-note">{{foot.staff_note}}</p>
+    </div>
+  </div>
+  <div class="wrap copyright">
+    <span>© <span id="yr">2026</span> Galereya Best. {{foot.rights}}</span>
+  </div>
+</footer>
+
+<script src="/js/site.js"></script>
+</body>
+</html>

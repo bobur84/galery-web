@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trimline C-2</title>
+<style>
+:root{--bg:#e9ebf2;--fg:#1d2030;--panel:#ffffffcc;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161f;--fg:#e8eaf3;--panel:#232636cc}}
+:root[data-theme="dark"]{--bg:#14161f;--fg:#e8eaf3;--panel:#232636cc}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+#c{display:block;width:100%;height:100%}
+#ui{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center;background:var(--panel);backdrop-filter:blur(8px);padding:8px 14px;border-radius:12px;font-size:14px;max-width:max-content;margin:auto}
+#ui label{display:flex;gap:6px;align-items:center}
+#ui input{width:32px;height:26px;border:0;padding:0;background:none}
+#hint{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:0;right:0;text-align:center;font-size:13px;opacity:.7;pointer-events:none}
+html,body{background:#fff}#hint{color:#444}#info{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:18px;color:#1d2030;pointer-events:none;line-height:1.2}#info b{display:block;font-size:26px;letter-spacing:.2px}#info span{display:block;margin-top:4px;font-size:15px;color:#555}</style></head><body>
+<canvas id="c"></canvas>
+<div id="info"><b>Trimline C-2</b><span>71x41x2400mm</span></div>
+<div id="hint">Вращайте мышью или пальцем · колесо — масштаб</div>
+<div id="ui">
+<label>Потолок<input type="color" id="cc" value="#7e838b"></label>
+<label>Стены<input type="color" id="cw" value="#585b65"></label>
+<label>Потолочный плинтус<input type="color" id="ck" value="#ffffff"></label>
+
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const RAW=[[-0.1563,0.385],[-0.221,0.3845],[-0.21,0.2675],[-0.1756,0.156],[-0.1334,0.0793],[-0.0847,0.0184],[-0.0113,-0.0476],[0.0542,-0.0892],[0.0568,-0.1716],[0.1113,-0.1788],[0.1387,-0.1882],[0.1636,-0.2058],[0.1887,-0.2395],[0.2008,-0.2634],[0.2017,-0.4954],[0.296,-0.4954],[0.296,-0.2973],[0.2838,-0.2835],[0.2956,-0.2657],[0.2954,-0.2414],[0.2838,-0.227],[0.2927,-0.2133],[0.296,-0.1853],[0.283,-0.1693],[0.2951,-0.1541],[0.2958,-0.133],[0.2835,-0.1122],[0.296,-0.0982],[0.296,0.0076],[0.0622,0.0075],[0.0315,0.0304],[-0.029,0.0923],[-0.0785,0.161],[-0.0991,0.2054],[-0.1164,0.2643],[-0.1243,0.3149],[-0.1267,0.3838]];
+const X0=0.296, Y0=0.385;
+let pts=RAW.map(p=>[X0-p[0],Y0-p[1]]);
+let area=0;for(let i=0;i<pts.length;i++){const a=pts[i],b=pts[(i+1)%pts.length];area+=a[0]*b[1]-b[0]*a[1]}
+if(area<0)pts.reverse();
+const n=pts.length;
+const en=[];for(let i=0;i<n;i++){const a=pts[i],b=pts[(i+1)%n];const dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1;en.push([dy/l,-dx/l])}
+function vn(i,e){const a=en[(i+n-1)%n],b=en[i%n];const d=a[0]*b[0]+a[1]*b[1];
+ const m=en[e];if(d<0.8)return m;const x=a[0]+b[0],y=a[1]+b[1],l=Math.hypot(x,y)||1;return[x/l,y/l]}
+const L=8;
+function ear(P){const idx=P.map((_,i)=>i),res=[];const cr=(a,b,c)=>(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);const ins=(p,a,b,c)=>cr(a,b,p)>=-1e-12&&cr(b,c,p)>=-1e-12&&cr(c,a,p)>=-1e-12;let g=0;while(idx.length>3&&g++<5000){let ok=false;for(let k=0;k<idx.length;k++){const i0=idx[(k+idx.length-1)%idx.length],i1=idx[k],i2=idx[(k+1)%idx.length];const a=P[i0],b=P[i1],c=P[i2];if(cr(a,b,c)<=1e-12)continue;if(idx.some(j=>j!==i0&&j!==i1&&j!==i2&&ins(P[j],a,b,c)))continue;res.push([i0,i1,i2]);idx.splice(k,1);ok=true;break}if(!ok)break}res.push(idx.slice());return res}
+function strip(w,L2){
+ const pos=[],nor=[],idx=[];
+ const W=(u,v,s)=>w?[u,-v,s]:[s,-v,u];
+ const N=(a)=>w?[a[0],-a[1],0]:[0,-a[1],a[0]];
+ for(let e=0;e<n;e++){const i=e,j=(e+1)%n,A=pts[i],B=pts[j];
+  const base=pos.length/3;
+  [W(A[0],A[1],A[0]),W(B[0],B[1],B[0]),W(A[0],A[1],L2),W(B[0],B[1],L2)].forEach(p=>pos.push(...p));
+  const na=N(vn(i,e)),nb=N(vn(j,e));
+  [na,nb,na,nb].forEach(q=>nor.push(...q));
+  idx.push(base,base+1,base+2,base+1,base+3,base+2)}
+ const nS=idx.length;
+ ear(pts).forEach(t=>{const b0=pos.length/3;t.forEach(i=>{pos.push(...W(pts[i][0],pts[i][1],L2));nor.push(...(w?[0,0,1]:[1,0,0]))});idx.push(b0,b0+1,b0+2)});
+ for(let t=0;t<idx.length;t+=3){const a=idx[t],b=idx[t+1],c=idx[t+2];const ux=pos[b*3]-pos[a*3],uy=pos[b*3+1]-pos[a*3+1],uz=pos[b*3+2]-pos[a*3+2],vx=pos[c*3]-pos[a*3],vy=pos[c*3+1]-pos[a*3+1],vz=pos[c*3+2]-pos[a*3+2];const nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;if(nx*nor[a*3]+ny*nor[a*3+1]+nz*nor[a*3+2]<0){idx[t+1]=c;idx[t+2]=b}}
+ const g=new THREE.BufferGeometry();
+ g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+ g.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
+ g.setIndex(idx);g.addGroup(0,nS,0);g.addGroup(nS,idx.length-nS,1);return g}
+const cv=document.getElementById('c');
+const R=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+R.setPixelRatio(Math.min(devicePixelRatio,2));
+const S=new THREE.Scene();S.background=new THREE.Color(0xffffff);
+const cam=new THREE.PerspectiveCamera(38,1,0.05,100);
+cam.position.set(1.080,-0.623,5.238);
+const ctl=new THREE.OrbitControls(cam,cv);ctl.target.set(0.9,-0.8,0.8);ctl.enableDamping=true;ctl.enablePan=false;ctl.minDistance=2.5;ctl.maxDistance=11;ctl.minPolarAngle=1.4;ctl.maxPolarAngle=2.2;ctl.minAzimuthAngle=-0.35;ctl.maxAzimuthAngle=1.2;
+const std=c=>new THREE.MeshStandardMaterial({color:c,roughness:.95});
+const mc=std(0x7e838b),mw=std(0x585b65),mwe=std(0xffffff),mcut=std(0xffffff);
+const mk=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.6,side:THREE.DoubleSide});
+const me=new THREE.MeshStandardMaterial({color:0xd4d3d3,roughness:.6,side:THREE.DoubleSide});
+const T=0.18,H=4.4,XB=5,XC=5,ZB=3.6,ZA=2.2;
+const slab=(x0,x1,y0,y1,z0,z1,mats)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(x1-x0,y1-y0,z1-z0),mats);m.position.set((x0+x1)/2,(y0+y1)/2,(z0+z1)/2);S.add(m)};
+slab(-T,0,-H,0,0,ZB,[mw,mwe,mwe,mwe,mwe,mwe]);
+slab(-T,XB,-H,0,-T,0,[mwe,mwe,mwe,mwe,mw,mwe]);
+slab(-T,XB,0,T,-T,ZB,[mcut,mcut,mcut,mc,mcut,mcut]);
+S.add(new THREE.Mesh(strip(0,XC),[mk,me]));S.add(new THREE.Mesh(strip(1,ZA),[mk,me]));
+S.add(new THREE.HemisphereLight(0xffffff,0x6a6f85,.5));
+const dl=new THREE.DirectionalLight(0xffffff,.45);dl.position.set(2,-1,3);S.add(dl);
+const dl2=new THREE.DirectionalLight(0xffffff,.3);dl2.position.set(3,-2,1);S.add(dl2);
+const hex=v=>new THREE.Color(v);
+cc.oninput=e=>mc.color=hex(e.target.value);cw.oninput=e=>mw.color=hex(e.target.value);ck.oninput=e=>mk.color=hex(e.target.value);
+function rs(){const w=innerWidth,h=innerHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+addEventListener('resize',rs);rs();
+(function loop(){ctl.update();R.render(S,cam);requestAnimationFrame(loop)})();
+</script></body></html>

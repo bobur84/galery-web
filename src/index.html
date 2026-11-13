@@ -1,13 +1,12 @@
 <!doctype html>
-<!-- Шаблон публичного сайта. Текст сюда не пишем — только ключи {{...}},
-     значения лежат в web/i18n/<язык>.json. Сборка: web/build.py -->
+<!-- Главная. Тексты — только ключами, значения в i18n/<язык>.json. Стили: css/home.css -->
 <html lang="{{lang}}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{{meta.title}}</title>
 <meta name="description" content="{{meta.desc}}">
-<meta name="theme-color" content="#12151a">
+<meta name="theme-color" content="#1c3fd1">
 <meta property="og:title" content="{{meta.og_title}}">
 <meta property="og:description" content="{{meta.og_desc}}">
 <meta property="og:type" content="website">
@@ -15,16 +14,17 @@
 <meta property="og:url" content="{{canonical}}">
 <link rel="canonical" href="{{canonical}}">
 {{alternates}}
-<link rel="stylesheet" href="/css/style.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%2312151a'/><text y='68' x='50' text-anchor='middle' font-size='58' font-family='Georgia,serif' fill='%23c9a961'>G</text></svg>">
+<link rel="stylesheet" href="/css/home.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232445c8'/><text y='70' x='50' text-anchor='middle' font-size='62' font-weight='800' font-family='Segoe UI,Arial,sans-serif' fill='%23ffffff'>G</text></svg>">
 </head>
-<body>
+<body class="bp-top">
+<script>document.documentElement.classList.add('js')</script>
 
 <header class="nav" id="nav">
   <div class="wrap nav-in">
     <a href="#top" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
     <nav class="nav-links">
-      <a href="#catalog">{{nav.catalog}}</a>
+      <a href="#catalog">{{nav.directions}}</a>
       <a href="#brands">{{nav.brands}}</a>
       <a href="#services">{{nav.services}}</a>
       <a href="#about">{{nav.about}}</a>
@@ -32,74 +32,150 @@
     </nav>
     <div class="nav-cta">
       {{lang_switch}}
-      <a href="#contacts" class="btn btn-gold">{{nav.cta}}</a>
+      <a href="#contacts" class="btn">{{nav.cta}}</a>
       <button class="burger" id="burger" aria-label="{{nav.menu_aria}}"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
 
-<!-- ГЕРОЙ -->
+<!-- ГЕРОЙ: синий «лист» с сеткой и чертежом профиля, ниже — пять направлений -->
 <section class="hero" id="top">
-  <div class="hero-bg"></div>
-  <div class="wrap hero-in">
-    <p class="eyebrow">{{hero.eyebrow}}</p>
-    <h1>{{!hero.h1}}</h1>
-    <p class="lead">{{hero.lead}}</p>
-    <div class="hero-btns">
-      <a href="#catalog" class="btn btn-gold btn-lg">{{hero.btn_catalog}}</a>
-      <a href="#contacts" class="btn btn-ghost btn-lg">{{hero.btn_consult}}</a>
+  <div class="wrap">
+    <div class="hero-top">
+      <div>
+        <p class="eyebrow">{{hero.eyebrow}}</p>
+        <h1>{{!hero.h1}}</h1>
+        <p class="lead">{{hero.lead}}</p>
+        <div class="hero-btns">
+          <a href="#catalog" class="btn btn-yellow btn-lg">{{hero.btn_catalog}}</a>
+          <a href="#contacts" class="btn btn-line-light btn-lg">{{hero.btn_consult}}</a>
+        </div>
+      </div>
+      <div class="drawing" role="img" aria-label="{{hero.drawing_aria}}">
+        <svg viewBox="440 70 840 1080" width="100%" aria-hidden="true">
+          <path class="prof" pathLength="1" fill="none" stroke="#fff" stroke-width="7" stroke-linejoin="round" d="M485 200 L602 200 A81 97 0 0 0 683 297 L683 383 A135 184 0 0 1 683 750 L683 835 A81 100 0 0 0 602 935 L485 935 L485 859 A10 10 0 0 0 485 839 L485 777 A10 10 0 0 0 485 757 L485 697 A10 10 0 0 0 485 677 L485 617 A10 10 0 0 0 485 597 L485 537 A10 10 0 0 0 485 517 L485 457 A10 10 0 0 0 485 437 L485 377 A10 10 0 0 0 485 357 L485 295 A10 10 0 0 0 485 275 Z"/>
+          <g class="dims" stroke="#FFD23F" stroke-width="5" fill="#FFD23F" font-family="inherit" font-size="44" font-weight="700">
+            <line x1="926" y1="200" x2="926" y2="935"/><line x1="906" y1="200" x2="946" y2="200"/><line x1="906" y1="935" x2="946" y2="935"/>
+            <text x="965" y="584" stroke="none">40 {{unit.mm}}</text>
+            <line x1="485" y1="1025" x2="818" y2="1025"/><line x1="485" y1="1005" x2="485" y2="1045"/><line x1="818" y1="1005" x2="818" y2="1045"/>
+            <text x="651" y="1105" stroke="none" text-anchor="middle">18 {{unit.mm}}</text>
+            <line x1="868" y1="142" x2="748" y2="418" stroke-width="4"/>
+            <text x="880" y="128" stroke="none">TRIMLINE M13</text>
+          </g>
+        </svg>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- НАПРАВЛЕНИЯ: каждое ведёт на свою страницу -->
+<section class="section" id="catalog">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow"><span class="num">01</span>{{cat.eyebrow}}</p>
+      <h2>{{!cat.h2}}</h2>
+      <p class="sub">{{cat.sub}}</p>
+    </div>
+    <div class="spec">
+      <a class="spec-i d1" id="cat-1" href="/{{lang}}/plintusy/">
+        <svg class="sp-ic" viewBox="0 0 150 90" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M10 80 L10 20 Q10 10 20 10 L50 10 L50 30 Q50 40 60 40 L90 40 Q100 60 120 64 L140 66 L140 80 Z"/></svg>
+        <span class="sp-n">01</span>
+        <h3>{{cat.c1_t}}</h3>
+        <p>{{cat.c1_d}}</p>
+        <dl><dt>{{cat.brands_lbl}}</dt><dd>IDEAL · NMC · PRIME DECOR · TRIMLINE · MARBET</dd></dl>
+      </a>
+      <a class="spec-i d2" id="cat-2" href="/{{lang}}/laminat/">
+        <svg class="sp-ic" viewBox="0 0 150 90" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M10 70 L140 70 M10 50 L140 50 M10 30 L140 30 M50 30 L50 50 M100 50 L100 70 M80 10 L80 30 M10 10 L140 10"/></svg>
+        <span class="sp-n">02</span>
+        <h3>{{cat.c2_t}}</h3>
+        <p>{{cat.c2_d}}</p>
+        <dl><dt>{{cat.brands_lbl}}</dt><dd>ART FLOOR</dd></dl>
+      </a>
+      <a class="spec-i d3" id="cat-3" href="/{{lang}}/paneli/">
+        <svg class="sp-ic" viewBox="0 0 150 90" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M14 10 L14 80 M38 10 L38 80 M62 10 L62 80 M86 10 L86 80 M110 10 L110 80 M134 10 L134 80"/></svg>
+        <span class="sp-n">03</span>
+        <h3>{{cat.c3_t}}</h3>
+        <p>{{cat.c3_d}}</p>
+        <dl><dt>{{cat.brands_lbl}}</dt><dd>DELUX · JINHAO Bamboo</dd></dl>
+      </a>
+      <a class="spec-i d4" id="cat-4" href="/{{lang}}/santehnika/">
+        <svg class="sp-ic" viewBox="0 0 150 90" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M30 40 L120 40 Q120 70 75 74 Q30 70 30 40 Z M75 40 L75 14 L95 14"/></svg>
+        <span class="sp-n">04</span>
+        <h3>{{cat.c5_t}}</h3>
+        <p>{{cat.c5_d}}</p>
+        <dl><dt>{{cat.brands_lbl}}</dt><dd>WASSERMANN · RVK · TIM</dd></dl>
+      </a>
+      <a class="spec-i d5" id="cat-5" href="/{{lang}}/dveri/">
+        <svg class="sp-ic" viewBox="0 0 150 90" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M40 80 L40 10 L110 10 L110 80 M52 22 L98 22 L98 70 L52 70 Z M90 46 L94 46"/></svg>
+        <span class="sp-n">05</span>
+        <h3>{{cat.c6_t}}</h3>
+        <p>{{cat.c6_d}}</p>
+        <dl><dt>{{cat.brands_lbl}}</dt><dd>{{cat.c6_tags}}</dd></dl>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ПРИЗЫВ -->
+<section class="cta-band">
+  <div class="wrap cta-in">
+    <h2>{{cta.h}}</h2>
+    <a href="#contacts" class="btn btn-blue btn-lg">{{cta.btn}}</a>
+  </div>
+</section>
+
+<!-- ЦИФРЫ -->
+<section class="facts">
+  <div class="wrap">
     <div class="hero-stats">
       <div><b>{{hero.s1_v}}</b><span>{{hero.s1_l}}</span></div>
       <div><b>{{hero.s2_v}}</b><span>{{hero.s2_l}}</span></div>
       <div><b>{{hero.s3_v}}</b><span>{{hero.s3_l}}</span></div>
+      <a href="#services" class="scroll-hint" aria-label="{{hero.scroll_aria}}">↓</a>
     </div>
   </div>
-  <a href="#catalog" class="scroll-hint" aria-label="{{hero.scroll_aria}}"></a>
 </section>
 
-<!-- КАТАЛОГ -->
-<section class="section" id="catalog">
+<!-- БЕГУЩАЯ СТРОКА БРЕНДОВ -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-in">
+    <span>IDEAL</span><span>ART FLOOR</span><span>NMC</span><span>DELUX</span><span>PRIME DECOR</span><span>MARBET</span><span>WASSERMANN</span><span>TRIMLINE</span><span>RVK</span><span>TIM</span><span>JINHAO</span><span>RUDA</span>
+    <span>IDEAL</span><span>ART FLOOR</span><span>NMC</span><span>DELUX</span><span>PRIME DECOR</span><span>MARBET</span><span>WASSERMANN</span><span>TRIMLINE</span><span>RVK</span><span>TIM</span><span>JINHAO</span><span>RUDA</span>
+  </div>
+</div>
+
+<!-- УСЛУГИ -->
+<section class="section section-paper" id="services">
   <div class="wrap">
-    <p class="eyebrow center">{{cat.eyebrow}}</p>
-    <h2 class="center">{{!cat.h2}}</h2>
-    <p class="sub center">{{cat.sub}}</p>
+    <div class="head">
+      <p class="eyebrow"><span class="num">02</span>{{srv.eyebrow}}</p>
+      <h2>{{!srv.h2}}</h2>
+    </div>
+    <div class="feats">
+      <div class="feat d1"><span class="feat-n">01</span><h3>{{srv.f1_t}}</h3><p>{{srv.f1_d}}</p></div>
+      <div class="feat d2"><span class="feat-n">02</span><h3>{{srv.f3_t}}</h3><p>{{srv.f3_d}}</p></div>
+      <div class="feat d3"><span class="feat-n">03</span><h3>{{srv.f4_t}}</h3><p>{{srv.f4_d}}</p></div>
+      <div class="feat d4"><span class="feat-n">04</span><h3>{{srv.f5_t}}</h3><p>{{srv.f5_d}}</p></div>
+      <div class="feat d5"><span class="feat-n">05</span><h3>{{srv.f6_t}}</h3><p>{{srv.f6_d}}</p></div>
+    </div>
+  </div>
+</section>
 
-    <div class="cards">
-      <article class="card">
-        <div class="card-ico">◲</div>
-        <h3>{{cat.c1_t}}</h3>
-        <p>{{cat.c1_d}}</p>
-        <p class="tags">IDEAL · NMC · PRIME DECOR · TRIM LINE · MARBET</p>
-      </article>
-
-      <article class="card">
-        <div class="card-ico">▤</div>
-        <h3>{{cat.c2_t}}</h3>
-        <p>{{cat.c2_d}}</p>
-        <p class="tags">ART FLOOR · EGGER</p>
-      </article>
-
-      <article class="card">
-        <div class="card-ico">▥</div>
-        <h3>{{cat.c3_t}}</h3>
-        <p>{{cat.c3_d}}</p>
-        <p class="tags">DELUX · JINHAO Bamboo · ART DECO</p>
-      </article>
-
-      <article class="card">
-        <div class="card-ico">◍</div>
-        <h3>{{cat.c5_t}}</h3>
-        <p>{{cat.c5_d}}</p>
-        <p class="tags">WASSERMANN · RVK</p>
-      </article>
-
-      <article class="card">
-        <div class="card-ico">▭</div>
-        <h3>{{cat.c6_t}}</h3>
-        <p>{{cat.c6_d}}</p>
-        <p class="tags">{{cat.c6_tags}}</p>
-      </article>
+<!-- О КОМПАНИИ -->
+<section class="section" id="about">
+  <div class="wrap about-grid">
+    <div class="about-txt">
+      <p class="eyebrow"><span class="num">03</span>{{about.eyebrow}}</p>
+      <h2>Galereya <em>Best</em></h2>
+      <p class="big">{{about.big}}</p>
+      <p>{{about.p2}}</p>
+      <p>{{about.p3}}</p>
+    </div>
+    <div class="about-side">
+      <div class="stat d1"><b>{{about.s1_v}}</b><span>{{about.s1_l}}</span></div>
+      <div class="stat d2"><b>{{about.s2_v}}</b><span>{{about.s2_l}}</span></div>
+      <div class="stat d3"><b>{{about.s3_v}}</b><span>{{about.s3_l}}</span></div>
+      <div class="stat stat-ink"><b>{{about.s4_v}}</b><span>{{about.s4_l}}</span></div>
     </div>
   </div>
 </section>
@@ -107,80 +183,33 @@
 <!-- БРЕНДЫ -->
 <section class="section section-dark" id="brands">
   <div class="wrap">
-    <p class="eyebrow center">{{brands.eyebrow}}</p>
-    <h2 class="center">{{!brands.h2}}</h2>
-    <p class="sub center">{{brands.sub}}</p>
+    <div class="head">
+      <p class="eyebrow"><span class="num">04</span>{{brands.eyebrow}}</p>
+      <h2>{{!brands.h2}}</h2>
+      <p class="sub">{{brands.sub}}</p>
+    </div>
+    <!-- ↗ — свой каталог бренда; → — страница направления или 3D-каталог на этом сайте -->
     <div class="brands">
-      <span>IDEAL</span><span>ART FLOOR</span><a class="brand-link" href="/nmc/">NMC</a>
-      <span>DELUX</span><a class="brand-link" href="/primedecor/">PRIME DECOR</a><a class="brand-link" href="/marbet/">MARBET</a><a class="brand-link" href="/wassermann/">WASSERMANN</a>
-      <span>TRIM LINE</span><a class="brand-link" href="/rvk/">RVK</a><a class="brand-link" href="/tim/">TIM</a><span>JINHAO</span>
-      <span>RUDA</span>
+      <a class="brand-link brand-in" href="/{{lang}}/plintusy/">IDEAL</a><a class="brand-link brand-in" href="/{{lang}}/laminat/">ART FLOOR</a><a class="brand-link brand-ext" href="/nmc/">NMC</a>
+      <a class="brand-link brand-in" href="/{{lang}}/paneli/">DELUX</a><a class="brand-link brand-ext" href="/primedecor/">PRIME DECOR</a><a class="brand-link brand-ext" href="/marbet/">MARBET</a>
+      <a class="brand-link brand-ext" href="/wassermann/">WASSERMANN</a><a class="brand-link brand-in" href="/{{lang}}/trimline/">TRIMLINE</a><a class="brand-link brand-ext" href="/rvk/">RVK</a>
+      <a class="brand-link brand-ext" href="/tim/">TIM</a><a class="brand-link brand-in" href="/{{lang}}/paneli/">JINHAO</a><a class="brand-link brand-in" href="/{{lang}}/dveri/">RUDA</a>
     </div>
   </div>
 </section>
 
-<!-- УСЛУГИ -->
-<section class="section" id="services">
-  <div class="wrap">
-    <p class="eyebrow center">{{srv.eyebrow}}</p>
-    <h2 class="center">{{!srv.h2}}</h2>
-    <div class="feats">
-      <div class="feat">
-        <h3>{{srv.f1_t}}</h3>
-        <p>{{srv.f1_d}}</p>
-      </div>
-      <div class="feat">
-        <h3>{{srv.f2_t}}</h3>
-        <p>{{srv.f2_d}}</p>
-      </div>
-      <div class="feat">
-        <h3>{{srv.f3_t}}</h3>
-        <p>{{srv.f3_d}}</p>
-      </div>
-      <div class="feat">
-        <h3>{{srv.f4_t}}</h3>
-        <p>{{srv.f4_d}}</p>
-      </div>
-      <div class="feat">
-        <h3>{{srv.f5_t}}</h3>
-        <p>{{srv.f5_d}}</p>
-      </div>
-      <div class="feat">
-        <h3>{{srv.f6_t}}</h3>
-        <p>{{srv.f6_d}}</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- О КОМПАНИИ -->
-<section class="section section-alt" id="about">
-  <div class="wrap about-grid">
-    <div>
-      <p class="eyebrow">{{about.eyebrow}}</p>
-      <h2>Galereya <em>Best</em></h2>
-      <p class="big">{{about.big}}</p>
-      <p>{{about.p2}}</p>
-      <p>{{about.p3}}</p>
-    </div>
-    <div class="about-side">
-      <div class="stat"><b>{{about.s1_v}}</b><span>{{about.s1_l}}</span></div>
-      <div class="stat"><b>{{about.s2_v}}</b><span>{{about.s2_l}}</span></div>
-      <div class="stat"><b>{{about.s3_v}}</b><span>{{about.s3_l}}</span></div>
-      <div class="stat"><b>{{about.s4_v}}</b><span>{{about.s4_l}}</span></div>
-    </div>
-  </div>
-</section>
+<!-- ПРИЗЫВ: замеры -->
 
 <!-- КОНТАКТЫ -->
-<section class="section section-dark" id="contacts">
+<section class="section" id="contacts">
   <div class="wrap">
-    <p class="eyebrow center">{{con.eyebrow}}</p>
-    <h2 class="center">{{!con.h2}}</h2>
-    <p class="sub center">{{con.sub}}</p>
+    <div class="head">
+      <p class="eyebrow"><span class="num">05</span>{{con.eyebrow}}</p>
+      <h2>{{!con.h2}}</h2>
+      <p class="sub">{{con.sub}}</p>
+    </div>
 
     <div class="contact-wrap">
-
       <div class="contacts-col">
         <div class="contact-card">
           <span class="c-lbl">{{con.addr_lbl}}</span>
@@ -192,8 +221,7 @@
           <span class="c-val">{{con.hours_val}}</span>
           <span class="c-note">{{con.hours_note}}</span>
         </div>
-        <!-- Телефон на сайте не публикуем: связь через почту и форму,
-             менеджер перезванивает сам. -->
+        <!-- Телефон на сайте не публикуем: связь через почту и форму. -->
         <div class="contact-card">
           <span class="c-lbl">{{con.email_lbl}}</span>
           <a class="c-val" href="mailto:{{co.email}}">{{co.email}}</a>
@@ -201,7 +229,7 @@
         </div>
       </div>
 
-      <!-- ФОРМА ЗАЯВКИ -->
+      <!-- ФОРМА ЗАЯВКИ: поля и адрес /api/contact не менять -->
       <div class="form-card">
         <h3>{{form.h3}}</h3>
         <p class="form-sub">{{form.sub}}</p>
@@ -219,24 +247,20 @@
             <label for="f-msg">{{form.msg_lbl}}</label>
             <textarea id="f-msg" name="message" rows="3" maxlength="2000" placeholder="{{form.msg_ph}}"></textarea>
           </div>
-          <!-- язык страницы: менеджер увидит его в задаче и ответит на нём же -->
           <input type="hidden" name="lang" value="{{lang}}">
-          <!-- ловушка для ботов: живой человек это поле не видит и не заполняет -->
+          <!-- ловушка для ботов -->
           <div class="hp" aria-hidden="true">
             <label for="f-company">{{form.company_lbl}}</label>
             <input id="f-company" name="company" tabindex="-1" autocomplete="off">
           </div>
-          <!-- Согласие на обработку данных: по закону РУз о персональных данных
-               оно должно быть явным действием, а не мелким текстом под кнопкой. -->
           <label class="consent">
             <input type="checkbox" id="f-consent" name="consent" value="yes" required>
             <span>{{!form.consent}}</span>
           </label>
-          <button type="submit" class="btn btn-gold btn-lg" id="leadBtn">{{form.submit}}</button>
+          <button type="submit" class="btn btn-ink btn-lg" id="leadBtn">{{form.submit}}</button>
           <p class="form-note" id="leadMsg" role="status"></p>
         </form>
       </div>
-
     </div>
   </div>
 </section>
@@ -257,7 +281,7 @@
       <a href="/{{lang}}/terms/">{{legal.terms_short}}</a>
     </nav>
     <div class="foot-staff">
-      <a href="https://office.galery.uz" class="btn btn-ghost btn-sm">{{foot.staff_btn}}</a>
+      <a href="https://office.galery.uz" class="btn btn-line-light btn-sm">{{foot.staff_btn}}</a>
       <p class="foot-note">{{foot.staff_note}}</p>
     </div>
   </div>
@@ -266,29 +290,10 @@
   </div>
 </footer>
 
+
+<script src="/js/site.js"></script>
 <script>
 (function(){
-  document.getElementById('yr').textContent = new Date().getFullYear();
-  var nav = document.getElementById('nav');
-  var onScroll = function(){ nav.classList.toggle('solid', window.scrollY > 30); };
-  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
-  document.getElementById('burger').addEventListener('click', function(){
-    nav.classList.toggle('open');
-  });
-  document.querySelectorAll('.nav-links a').forEach(function(a){
-    a.addEventListener('click', function(){ nav.classList.remove('open'); });
-  });
-
-  // ---- выбор языка ----
-  // Запоминаем выбор в cookie: по ней nginx на следующий заход с корня galery.uz
-  // отдаст ту же версию, не глядя на страну по IP.
-  document.querySelectorAll('.langs a').forEach(function(a){
-    a.addEventListener('click', function(){
-      document.cookie = 'lang=' + a.getAttribute('hreflang') +
-                        ';path=/;max-age=31536000;samesite=Lax';
-    });
-  });
-
   // ---- форма заявки ----
   var T = {
     required: {{js.err_required}},
@@ -332,15 +337,6 @@
     });
   }
 
-  // плавное появление секций
-  if ('IntersectionObserver' in window){
-    var io = new IntersectionObserver(function(es){
-      es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, {threshold:0.12});
-    document.querySelectorAll('.card,.feat,.stat,.contact-card,.about-grid > div').forEach(function(el){
-      el.classList.add('rise'); io.observe(el);
-    });
-  }
 })();
 </script>
 </body>

@@ -1,0 +1,289 @@
+<!doctype html>
+<!-- Каталог бренда (образец для всех брендов): шапка бренда, каталог-склад, карточка товара. -->
+<html lang="{{lang}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{page.title}}</title>
+<meta name="description" content="{{page.desc}}">
+<meta name="theme-color" content="#2445c8">
+<link rel="canonical" href="{{canonical}}">
+{{alternates}}
+<link rel="stylesheet" href="/css/home.css">
+<style>
+/* ---------- стили каталога бренда (дополняют /css/home.css) ---------- */
+.bk{--c:#1c3fd1;--on:#fff}                     /* цвет направления: плинтусы — синий, сантехника — #f07a1a */
+.bk-hero{background:var(--c);background-image:var(--grid);background-size:var(--grid-size);color:var(--on);padding:120px 0 56px}
+.bk-crow{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;align-items:center;margin-bottom:22px}
+.bk-hero .crumbs{font-size:13px;margin:0;opacity:.9}
+.bk-3dl{font-size:13px;font-weight:700;color:#ffd23f;border-bottom:1px solid rgba(255,210,63,.6);padding-bottom:2px}
+.bk-3dl:hover{color:#fff;border-color:#fff}
+.bk-hero .crumbs a{color:inherit}
+.bk-eye{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#ffd23f;margin-bottom:12px}
+.bk-hero h1{font-size:clamp(48px,7vw,96px);line-height:1;margin-bottom:18px;color:inherit}
+.bk-hero .lead{max-width:640px;font-size:18px;line-height:1.6;color:#dce3ff}
+.bk-top{max-width:760px}
+.bk-stats{display:flex;gap:48px;margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,.25)}
+.bk-stats b{display:block;font-size:34px;font-weight:800;line-height:1.1}
+.bk-stats span{font-size:13px;color:#cdd6ff}
+.bk-3d{display:inline-flex;align-items:center;gap:10px;background:#ffd23f;color:#0e1530;font-weight:700;padding:14px 22px;border-radius:4px;white-space:nowrap}
+.bk-3d:hover{background:#fff}
+
+.bk-bar{position:sticky;top:64px;z-index:5;background:#fff;border-bottom:1.5px solid #d9def0}
+.bk-bar .wrap{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding-top:14px;padding-bottom:14px}
+.bk-tabs{display:flex;flex-wrap:wrap;gap:8px;flex:1}
+.bk-tab{padding:9px 16px;border:1.5px solid var(--c);border-radius:4px;background:#fff;color:#0e1530;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.bk-tab.on,.bk-tab:hover{background:var(--c);color:#fff}
+.bk-search{padding:10px 14px;border:1.5px solid #d9def0;border-radius:4px;font:inherit;font-size:14px;min-width:220px}
+.bk-search:focus{outline:none;border-color:var(--c)}
+.bk-only{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#0e1530;cursor:pointer}
+.bk-only input{width:18px;height:18px;accent-color:var(--c)}
+.bk-count{font-size:13px;color:#56608a}
+
+.bk-list{padding:36px 0 80px;background:#f4f6fc}
+.bk-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.bk-card{background:#fff;border:1.5px solid #d9def0;border-radius:4px;cursor:pointer;text-align:left;font:inherit;color:inherit;padding:0;display:flex;flex-direction:column;transition:border-color .2s}
+.bk-card:hover,.bk-card:focus-visible{border-color:var(--c);outline:none}
+.bk-img{position:relative;aspect-ratio:1/1;background:#eef2ff;display:grid;place-items:center;border-bottom:1.5px solid #d9def0}
+.bk-img svg{width:62%;height:62%;color:var(--c)}
+.bk-img small{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:11px;color:#56608a}
+.bk-badges{position:absolute;top:10px;left:10px;display:flex;gap:6px}
+.bk-b{font-size:11px;font-weight:800;letter-spacing:.06em;padding:4px 8px;border-radius:3px;text-transform:uppercase}
+.bk-b.hit{background:#ffd23f;color:#0e1530}
+.bk-b.in{background:#0e9e75;color:#fff}
+.bk-b.out{background:#e4e7f2;color:#56608a}
+.bk-info{padding:14px 16px 18px}
+.bk-info h3{font-size:20px;margin-bottom:4px}
+.bk-info p{font-size:13px;color:#56608a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bk-info .sz{margin-top:10px;font-size:14px;font-weight:700;color:var(--c)}
+.bk-empty{padding:40px;text-align:center;color:#56608a;display:none}
+
+.bk-modal{position:fixed;inset:0;z-index:300;background:rgba(14,21,48,.55);display:none;align-items:center;justify-content:center;padding:20px}
+.bk-modal.open{display:flex}
+.bk-box{background:#fff;border-radius:4px;max-width:900px;width:100%;max-height:92vh;overflow:auto;display:grid;grid-template-columns:1fr 1fr;position:relative}
+.bk-x{position:absolute;top:10px;right:10px;width:36px;height:36px;border:0;border-radius:4px;background:#eef2ff;font-size:20px;cursor:pointer;color:#0e1530}
+.bk-pics{background:#f4f6fc;display:grid;grid-template-rows:1fr 1fr;gap:1.5px;border-right:1.5px solid #d9def0}
+.bk-pic{display:grid;place-items:center;padding:24px;position:relative;color:#56608a;font-size:12px;min-height:200px}
+.bk-pic svg{width:60%;max-height:160px;color:var(--c)}
+.bk-pic span{position:absolute;bottom:10px}
+.bk-det{padding:32px 32px 28px}
+.bk-det h2{font-size:34px;margin-bottom:2px}
+.bk-sub{font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--c);text-transform:uppercase;margin-bottom:16px}
+.bk-det p.d{font-size:15px;line-height:1.6;color:#1d2440;margin-bottom:18px}
+.bk-tbl{width:100%;border-collapse:collapse;font-size:14px;margin-bottom:22px}
+.bk-tbl th,.bk-tbl td{padding:10px 0;border-bottom:1px solid #d9def0;text-align:left}
+.bk-tbl th{font-weight:400;color:#56608a}
+.bk-tbl td{font-weight:700;text-align:right;color:#0e1530}
+.bk-acts{display:flex;flex-wrap:wrap;gap:10px}
+.bk-note{margin-top:16px;font-size:12px;color:#56608a;line-height:1.5}
+@media (max-width:1000px){.bk-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){
+  .bk-top{grid-template-columns:1fr}.bk-stats{gap:28px}
+  .bk-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .bk-box{grid-template-columns:1fr}.bk-pics{border-right:0;border-bottom:1.5px solid #d9def0}
+  .bk-search{min-width:0;flex:1}
+}
+</style>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232445c8'/><text y='70' x='50' text-anchor='middle' font-size='62' font-weight='800' font-family='Segoe UI,Arial,sans-serif' fill='%23ffffff'>G</text></svg>">
+</head>
+<body class="bk">
+<script>document.documentElement.classList.add('js')</script>
+
+<header class="nav solid" id="nav" data-solid>
+  <div class="wrap nav-in">
+    <a href="/{{lang}}/" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
+    <nav class="nav-links">
+      <a href="/{{lang}}/#catalog">{{nav.directions}}</a>
+      <a href="/{{lang}}/#brands">{{nav.brands}}</a>
+      <a href="/{{lang}}/#services">{{nav.services}}</a>
+      <a href="/{{lang}}/#about">{{nav.about}}</a>
+      <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
+    </nav>
+    <div class="nav-cta">
+      {{lang_switch}}
+      <a href="/{{lang}}/#contacts" class="btn">{{nav.cta}}</a>
+      <button class="burger" id="burger" aria-label="{{nav.menu_aria}}"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- 1) ШАПКА БРЕНДА -->
+<section class="bk-hero">
+  <div class="wrap">
+    <div class="bk-crow">
+      <p class="crumbs"><a href="/{{lang}}/">{{legal.back}}</a> / <a href="/{{lang}}/plintusy/">{{cat.c1_t}}</a> / TRIMLINE</p>
+      <!-- Ссылка на 3D-шоурум — только у брендов, где он есть -->
+      <a class="bk-3dl" href="/{{lang}}/3d/">▶ {{bk.showroom}}</a>
+    </div>
+    <div class="bk-top">
+      <p class="bk-eye">{{bk.eye}}</p>
+      <h1>TRIMLINE</h1>
+      <p class="lead">{{bk.lead}}</p>
+    </div>
+    <div class="bk-stats">
+      <div><b id="st-all">0</b><span>{{bk.s_all}}</span></div>
+      <div><b id="st-in">0</b><span>{{bk.s_in}}</span></div>
+      <div><b>2400 {{unit.mm}}</b><span>{{bk.s_len}}</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2) КАТАЛОГ-СКЛАД: фильтры + сетка -->
+<div class="bk-bar">
+  <div class="wrap">
+    <div class="bk-tabs" id="tabs">
+      <button class="bk-tab on" data-cat="all">{{bk.all}}</button>
+      <button class="bk-tab" data-cat="moulding">{{bk.t_moulding}}</button>
+      <button class="bk-tab" data-cat="panel">{{bk.t_panel}}</button>
+      <button class="bk-tab" data-cat="plinth">{{bk.t_plinth}}</button>
+      <button class="bk-tab" data-cat="cornice">{{bk.t_cornice}}</button>
+    </div>
+    <input class="bk-search" id="q" type="search" placeholder="{{bk.search}}" aria-label="{{bk.search}}">
+    <label class="bk-only"><input type="checkbox" id="only"> {{bk.only}}</label>
+    <span class="bk-count" id="count" data-of="{{bk.of}}"></span>
+  </div>
+</div>
+
+<section class="bk-list">
+  <div class="wrap">
+    <div class="bk-grid" id="grid" data-hit="{{bk.hit}}" data-in="{{bk.in}}" data-out="{{bk.out}}" data-photo="{{bk.photo}}" data-draw="{{bk.draw}}"></div>
+    <p class="bk-empty" id="empty">{{bk.empty}}</p>
+  </div>
+</section>
+
+<!-- ТОВАРЫ — ПРИМЕР. Реальные товары, остатки и фото подставляются со склада (galereya-report).
+     data-code — код, data-cat — тип (как в табах), data-size, data-len, data-stock (1/0), data-hit (1/0),
+     data-photo / data-profile — пути к фото и чертежу (пусто = заглушка);
+     внутри: .n — наименование, .d — описание. -->
+<ul id="items" hidden>
+  <li data-code="M21" data-cat="moulding" data-size="25×14 {{unit.mm}}" data-len="2400 {{unit.mm}}" data-stock="1" data-hit="1"><span class="n">TRIMLINE M21 · {{bk.n_moulding}}</span><span class="d">{{bk.i1}}</span></li>
+  <li data-code="M13" data-cat="moulding" data-size="40×18 {{unit.mm}}" data-len="2400 {{unit.mm}}" data-stock="1" data-hit="1"><span class="n">TRIMLINE M13 · {{bk.n_moulding}}</span><span class="d">{{bk.i2}}</span></li>
+  <li data-code="M30" data-cat="moulding" data-size="60×20 {{unit.mm}}" data-len="2400 {{unit.mm}}" data-stock="0" data-hit="0"><span class="n">TRIMLINE M30 · {{bk.n_moulding}}</span><span class="d">{{bk.i3}}</span></li>
+  <li data-code="W9" data-cat="panel" data-size="{{bk.size_cat}}" data-len="2400 {{unit.mm}}" data-stock="1" data-hit="1"><span class="n">TRIMLINE W9 · {{bk.n_panel}}</span><span class="d">{{bk.i4}}</span></li>
+  <li data-code="W12" data-cat="panel" data-size="{{bk.size_cat}}" data-len="2400 {{unit.mm}}" data-stock="0" data-hit="0"><span class="n">TRIMLINE W12 · {{bk.n_panel}}</span><span class="d">{{bk.i5}}</span></li>
+  <li data-code="P7" data-cat="plinth" data-size="80×15 {{unit.mm}}" data-len="2400 {{unit.mm}}" data-stock="1" data-hit="0"><span class="n">TRIMLINE P7 · {{bk.n_plinth}}</span><span class="d">{{bk.i6}}</span></li>
+  <li data-code="P10" data-cat="plinth" data-size="100×16 {{unit.mm}}" data-len="2400 {{unit.mm}}" data-stock="1" data-hit="0"><span class="n">TRIMLINE P10 · {{bk.n_plinth}}</span><span class="d">{{bk.i7}}</span></li>
+  <li data-code="C-3" data-cat="cornice" data-size="220×92 {{unit.mm}}" data-len="2400 {{unit.mm}}" data-stock="1" data-hit="1"><span class="n">TRIMLINE C-3 · {{bk.n_cornice}}</span><span class="d">{{bk.i8}}</span></li>
+</ul>
+</main>
+
+<!-- 3) КАРТОЧКА ТОВАРА (окно) -->
+<div class="bk-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-t">
+  <div class="bk-box">
+    <button class="bk-x" id="m-x" aria-label="{{bk.close}}">×</button>
+    <div class="bk-pics">
+      <div class="bk-pic" id="m-photo"></div>
+      <div class="bk-pic" id="m-draw"></div>
+    </div>
+    <div class="bk-det">
+      <h2 id="m-t"></h2>
+      <p class="bk-sub" id="m-sub"></p>
+      <p class="d" id="m-d"></p>
+      <table class="bk-tbl"><tbody id="m-tbl" data-code="{{bk.f_code}}" data-name="{{bk.f_name}}" data-size="{{bk.f_size}}" data-len="{{bk.f_len}}" data-stock="{{bk.f_stock}}" data-in="{{bk.st_in}}" data-out="{{bk.st_out}}"></tbody></table>
+      <div class="bk-acts">
+        <a class="btn btn-yellow" href="/{{lang}}/#contacts">{{bk.req}}</a>
+        <a class="btn btn-line" href="/{{lang}}/3d/">{{bk.view3d}}</a>
+      </div>
+      <p class="bk-note">{{bk.note}}</p>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <div>
+      <a href="/{{lang}}/" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
+      <p class="foot-txt">{{foot.txt}}</p>
+    </div>
+    <nav class="foot-links">
+      <a href="/{{lang}}/#catalog">{{nav.catalog}}</a>
+      <a href="/{{lang}}/#brands">{{nav.brands}}</a>
+      <a href="/{{lang}}/#services">{{nav.services}}</a>
+      <a href="/{{lang}}/#about">{{nav.about}}</a>
+      <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
+      <a href="/{{lang}}/privacy/">{{legal.privacy_short}}</a>
+      <a href="/{{lang}}/terms/">{{legal.terms_short}}</a>
+    </nav>
+    <div class="foot-staff">
+      <a href="https://office.galery.uz" class="btn btn-line-light btn-sm">{{foot.staff_btn}}</a>
+      <p class="foot-note">{{foot.staff_note}}</p>
+    </div>
+  </div>
+  <div class="wrap copyright">
+    <span>© <span id="yr">2026</span> Galereya Best. {{foot.rights}}</span>
+  </div>
+</footer>
+
+<script src="/js/site.js"></script>
+
+<script src="/js/site.js"></script>
+<script>
+/* Товары берутся из списка #items выше (в реальном каталоге — со склада). */
+var G=document.getElementById('grid'), TB=document.getElementById('m-tbl');
+var ITEMS=[].map.call(document.querySelectorAll('#items li'),function(li){
+  return {code:li.dataset.code, cat:li.dataset.cat, size:li.dataset.size, len:li.dataset.len,
+          stock:li.dataset.stock==="1", hit:li.dataset.hit==="1", photo:li.dataset.photo||"", profile:li.dataset.profile||"",
+          name:li.querySelector('.n').textContent, desc:li.querySelector('.d').textContent};
+});
+/* Заглушки картинок: пока нет фото, рисуем схематичный профиль по типу */
+var ICON = {
+  moulding:'<path d="M20 10 L60 10 L60 30 Q80 40 80 50 Q80 60 60 70 L60 90 L20 90 Z"/>',
+  panel:'<path d="M15 10 L15 90 M35 10 L35 90 M55 10 L55 90 M75 10 L75 90 M15 10 L85 10 M15 90 L85 90"/>',
+  plinth:'<path d="M20 90 L20 10 L45 10 L45 40 Q60 45 70 60 L80 60 L80 90 Z"/>',
+  cornice:'<path d="M15 15 L85 15 L85 30 Q60 35 50 55 Q40 75 30 80 L15 85 Z"/>'
+};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function pic(it, src, label){
+  if (src) return '<img src="'+esc(src)+'" alt="'+esc(it.name)+'">';
+  return '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" aria-hidden="true">'+ICON[it.cat]+'</svg>'+(label?'<small>'+esc(label)+'</small>':'');
+}
+var cat="all";
+function render(){
+  var q=document.getElementById('q').value.trim().toLowerCase(), only=document.getElementById('only').checked;
+  var list=ITEMS.filter(function(it){
+    return (cat==="all"||it.cat===cat) && (!only||it.stock) &&
+      (!q || (it.code+" "+it.name+" "+it.size).toLowerCase().indexOf(q)>-1);
+  });
+  G.innerHTML=list.map(function(it){
+    return '<button class="bk-card" data-i="'+ITEMS.indexOf(it)+'">'+
+      '<div class="bk-img"><div class="bk-badges">'+(it.hit?'<span class="bk-b hit">'+esc(G.dataset.hit)+'</span>':'')+
+      (it.stock?'<span class="bk-b in">'+esc(G.dataset.in)+'</span>':'<span class="bk-b out">'+esc(G.dataset.out)+'</span>')+'</div>'+
+      pic(it,it.photo,G.dataset.photo)+'</div>'+
+      '<div class="bk-info"><h3>'+esc(it.code)+'</h3><p>'+esc(it.name)+'</p><div class="sz">'+esc(it.size)+'</div></div></button>';
+  }).join('');
+  var c=document.getElementById('count');
+  c.textContent=c.dataset.of.replace('{n}',list.length).replace('{m}',ITEMS.length);
+  document.getElementById('empty').style.display=list.length?'none':'block';
+}
+document.getElementById('st-all').textContent=ITEMS.length;
+document.getElementById('st-in').textContent=ITEMS.filter(function(x){return x.stock}).length;
+document.getElementById('tabs').addEventListener('click',function(e){
+  var b=e.target.closest('.bk-tab'); if(!b) return;
+  [].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)}); cat=b.dataset.cat; render();
+});
+document.getElementById('q').addEventListener('input',render);
+document.getElementById('only').addEventListener('change',render);
+
+/* карточка товара */
+var modal=document.getElementById('modal'), last=null;
+G.addEventListener('click',function(e){
+  var c=e.target.closest('.bk-card'); if(!c) return; last=c;
+  var it=ITEMS[+c.dataset.i], L=TB.dataset;
+  document.getElementById('m-t').textContent=it.code;
+  document.getElementById('m-sub').textContent=it.name;
+  document.getElementById('m-d').textContent=it.desc;
+  document.getElementById('m-photo').innerHTML=pic(it,it.photo,'')+'<span>'+esc(G.dataset.photo)+'</span>';
+  document.getElementById('m-draw').innerHTML=pic(it,it.profile,'')+'<span>'+esc(G.dataset.draw)+'</span>';
+  TB.innerHTML=[[L.code,it.code],[L.name,it.name],[L.size,it.size],[L.len,it.len],[L.stock,it.stock?L.in:L.out]]
+    .map(function(r){return '<tr><th>'+esc(r[0])+'</th><td>'+esc(r[1])+'</td></tr>'}).join('');
+  modal.classList.add('open'); document.getElementById('m-x').focus();
+});
+function closeM(){modal.classList.remove('open'); if(last) last.focus();}
+document.getElementById('m-x').addEventListener('click',closeM);
+modal.addEventListener('click',function(e){if(e.target===modal) closeM();});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('open')) closeM();});
+render();
+</script>
+</body>
+</html>

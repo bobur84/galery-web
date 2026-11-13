@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Молдинг M22</title>
+<style>
+:root{--bg:#e9ebf2;--fg:#1d2030;--panel:#ffffffcc}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14161f;--fg:#e8eaf3;--panel:#232636cc}}
+:root[data-theme="dark"]{--bg:#14161f;--fg:#e8eaf3;--panel:#232636cc}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+#c{display:block;width:100%;height:100%}
+#ui{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center;background:var(--panel);backdrop-filter:blur(8px);padding:8px 14px;border-radius:12px;font-size:14px;max-width:max-content;margin:auto}
+#ui label{display:flex;gap:6px;align-items:center}
+#pv,#pv0,#pv2{font:inherit;color:var(--fg);background:transparent;border:1px solid currentColor;border-radius:8px;padding:4px 12px;cursor:pointer;min-height:32px}
+#ui input{width:32px;height:26px;border:0;padding:0;background:none}
+#hint{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:0;right:0;text-align:center;font-size:13px;opacity:.7;pointer-events:none}
+html,body{background:#fff}#hint{color:#444}#info{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:18px;color:#1d2030;pointer-events:none;line-height:1.2}#info b{display:block;font-size:26px;letter-spacing:.2px}#info span{display:block;margin-top:4px;font-size:15px;opacity:.75}
+</style>
+<canvas id="c"></canvas>
+<div id="info"><b>Молдинг</b><span>Trimline M22</span></div>
+<div id="hint">Вращайте мышью или пальцем · колесо — масштаб</div>
+<div id="ui">
+<label>Стены<input type="color" id="cw" value="#353b4b"></label>
+<label>Молдинг<input type="color" id="ck" value="#ffffff"></label>
+<button id="pv0" type="button">Вид карточки</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+function ear(P){const idx=P.map((_,i)=>i),res=[];const cr=(a,b,c)=>(b[0]-a[0])*(c[1]-a[1])-(b[1]-a[1])*(c[0]-a[0]);const ins=(p,a,b,c)=>cr(a,b,p)>=-1e-12&&cr(b,c,p)>=-1e-12&&cr(c,a,p)>=-1e-12;let g=0;while(idx.length>3&&g++<5000){let ok=false;for(let k=0;k<idx.length;k++){const i0=idx[(k+idx.length-1)%idx.length],i1=idx[k],i2=idx[(k+1)%idx.length];const a=P[i0],b=P[i1],c=P[i2];if(cr(a,b,c)<=1e-12)continue;if(idx.some(j=>j!==i0&&j!==i1&&j!==i2&&ins(P[j],a,b,c)))continue;res.push([i0,i1,i2]);idx.splice(k,1);ok=true;break}if(!ok)break}res.push(idx.slice());return res}
+const cv=document.getElementById('c');
+const R=new THREE.WebGLRenderer({canvas:cv,antialias:true});
+R.setPixelRatio(Math.min(Math.max(devicePixelRatio,2),3));R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
+const S=new THREE.Scene();S.background=new THREE.Color(0xffffff);
+const cam=new THREE.PerspectiveCamera(38,1,0.05,100);
+cam.position.set(0.617,0.564,0.458);
+const ctl=new THREE.OrbitControls(cam,cv);ctl.target.set(-0.08,0.47,0.05);ctl.enableDamping=true;ctl.enablePan=false;ctl.minAzimuthAngle=0;ctl.maxAzimuthAngle=Math.PI/2;ctl.minPolarAngle=Math.PI*0.33;ctl.maxPolarAngle=Math.PI*0.56;ctl.minDistance=0.3;ctl.maxDistance=1.2;
+const std=c=>new THREE.MeshStandardMaterial({color:c,roughness:.95});
+const mw=std(0x353b4b),mwe=std(0x4f5464);
+const mk=new THREE.MeshStandardMaterial({color:0xffffff,roughness:.6,side:THREE.DoubleSide});
+mk.polygonOffset=true;mk.polygonOffsetFactor=1;mk.polygonOffsetUnits=1;
+const mkc=mk.clone();mkc.color.set(0xa8a8a8);
+const slab=(x0,x1,y0,y1,z0,z1,mats)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(x1-x0,y1-y0,z1-z0),mats);m.position.set((x0+x1)/2,(y0+y1)/2,(z0+z1)/2);m.receiveShadow=true;S.add(m);return m};
+
+/* ---------- Молдинг: кусок стены с выступом ----------
+   План сверху: стена по z=0, выступ NA..NB шириной и ND глубиной.
+   Молдинг идёт по стене, огибает выступ, на внешних углах запил 45°, на внутренних стык в ус. */
+const MH=0.9,MT=0.03,MY=0.45,OFF=0.0004;
+const WL=-0.45,WR=0.3,MR=0.18,NA=-0.12,NB=0.02,ND=0.06;
+slab(WL,WR,0,MH,-MT,0,[mwe,mwe,mwe,mwe,mw,mwe]);
+slab(NA,NB,0,MH,0,ND,[mw,mw,mwe,mwe,mw,mwe]).castShadow=true;
+/* сечение молдинга из STL: u — от стены (мм→м), v — вверх; задняя плоская сторона у стены, высота 25 мм */
+const PROFILE=[[0.00000,0.00000],[0.00000,0.00670],[0.00133,0.00742],[0.00155,0.01234],[0.00223,0.01331],[0.00254,0.01375],[0.00279,0.01414],[0.00300,0.01449],[0.00317,0.01481],[0.00329,0.01510],[0.00338,0.01537],[0.00342,0.01562],[0.00343,0.01587],[0.00341,0.01611],[0.00335,0.01635],[0.00325,0.01661],[0.00313,0.01688],[0.00303,0.01704],[0.00291,0.01721],[0.00276,0.01737],[0.00260,0.01753],[0.00242,0.01768],[0.00222,0.01782],[0.00200,0.01796],[0.00177,0.01809],[0.00153,0.01822],[0.00127,0.01833],[0.00101,0.01843],[0.00073,0.01852],[0.00008,0.01870],[0.00003,0.02186],[0.00000,0.02500],[0.00383,0.02500],[0.00422,0.02427],[0.00437,0.02400],[0.00451,0.02380],[0.00459,0.02371],[0.00466,0.02364],[0.00474,0.02357],[0.00483,0.02351],[0.00493,0.02346],[0.00515,0.02336],[0.00540,0.02327],[0.00561,0.02319],[0.00570,0.02314],[0.00584,0.02304],[0.00590,0.02299],[0.00601,0.02288],[0.00608,0.02274],[0.00614,0.02260],[0.00618,0.02252],[0.00623,0.02245],[0.00628,0.02239],[0.00634,0.02232],[0.00642,0.02226],[0.00650,0.02220],[0.00671,0.02207],[0.00696,0.02195],[0.00741,0.02176],[0.00769,0.02161],[0.00797,0.02146],[0.00822,0.02130],[0.00847,0.02113],[0.00870,0.02095],[0.00891,0.02076],[0.00911,0.02056],[0.00930,0.02035],[0.00947,0.02013],[0.00963,0.01991],[0.00972,0.01975],[0.00982,0.01957],[0.00990,0.01939],[0.00998,0.01921],[0.01005,0.01901],[0.01012,0.01881],[0.01018,0.01860],[0.01027,0.01817],[0.01034,0.01773],[0.01037,0.01751],[0.01039,0.01706],[0.01038,0.01662],[0.01037,0.01640],[0.01034,0.01618],[0.01031,0.01597],[0.01027,0.01577],[0.01022,0.01557],[0.01017,0.01537],[0.01010,0.01519],[0.01002,0.01501],[0.00994,0.01484],[0.00980,0.01459],[0.00964,0.01434],[0.00947,0.01410],[0.00928,0.01386],[0.00908,0.01362],[0.00886,0.01337],[0.00861,0.01313],[0.00835,0.01288],[0.00807,0.01263],[0.00776,0.01238],[0.00743,0.01211],[0.00672,0.01157],[0.00639,0.01130],[0.00609,0.01104],[0.00582,0.01079],[0.00558,0.01055],[0.00538,0.01032],[0.00521,0.01010],[0.00506,0.00989],[0.00495,0.00969],[0.00488,0.00950],[0.00483,0.00931],[0.00481,0.00914],[0.00483,0.00901],[0.00487,0.00886],[0.00497,0.00859],[0.00506,0.00840],[0.00516,0.00821],[0.00535,0.00791],[0.00547,0.00772],[0.00556,0.00753],[0.00563,0.00735],[0.00568,0.00718],[0.00571,0.00702],[0.00572,0.00686],[0.00571,0.00670],[0.00568,0.00655],[0.00564,0.00638],[0.00557,0.00622],[0.00538,0.00583],[0.00531,0.00562],[0.00528,0.00551],[0.00525,0.00528],[0.00524,0.00501],[0.00525,0.00471],[0.00529,0.00425],[0.00529,0.00399],[0.00528,0.00376],[0.00526,0.00354],[0.00521,0.00333],[0.00515,0.00314],[0.00506,0.00296],[0.00496,0.00279],[0.00483,0.00263],[0.00468,0.00246],[0.00451,0.00230],[0.00383,0.00175],[0.00359,0.00153],[0.00349,0.00143],[0.00340,0.00131],[0.00332,0.00120],[0.00315,0.00093],[0.00266,0.00000]];
+function sampleProfile(){return PROFILE}
+function prep(P){
+ let a=0;for(let i=0;i<P.length;i++){const p=P[i],q=P[(i+1)%P.length];a+=p[0]*q[1]-q[0]*p[1]}
+ const pp=(a<0?P.slice().reverse():P.slice()).map(p=>[p[0]+OFF,p[1]]);
+ const k=pp.length,e=[];
+ for(let i=0;i<k;i++){const p=pp[i],q=pp[(i+1)%k],dx=q[0]-p[0],dy=q[1]-p[1],l=Math.hypot(dx,dy)||1;e.push([dy/l,-dx/l])}
+ const vv=(i,j)=>{const a=e[(i+k-1)%k],b=e[i%k],d=a[0]*b[0]+a[1]*b[1];if(d<0.8)return e[j];const x=a[0]+b[0],y=a[1]+b[1],l=Math.hypot(x,y)||1;return[x/l,y/l]};
+ return{pts:pp,n:k,en:e,vv:vv}}
+/* V — точки пути на поверхности стены [x,z], Nrm — наружные нормали сегментов [x,z] */
+function buildMold(P,V,Nrm,y0){
+ const pr=prep(P),pp=pr.pts,k=pr.n,ns=Nrm.length,out=[],tris=ear(pp);
+ const mv=[];
+ for(let i=0;i<=ns;i++){
+  if(i===0)mv.push(Nrm[0]);
+  else if(i===ns)mv.push(Nrm[ns-1]);
+  else{const a=Nrm[i-1],b=Nrm[i],f=1+a[0]*b[0]+a[1]*b[1];mv.push([(a[0]+b[0])/f,(a[1]+b[1])/f])}}
+ const rings=mv.map((m,i)=>pp.map(p=>[V[i][0]+p[0]*m[0],y0+p[1],V[i][1]+p[0]*m[1]]));
+ for(let s=0;s<ns;s++){
+  const pos=[],nor=[],idx=[],N=Nrm[s],R0=rings[s],R1=rings[s+1];
+  const nn=q=>[q[0]*N[0],q[1],q[0]*N[1]];
+  for(let e=0;e<k;e++){const i=e,j=(e+1)%k,b=pos.length/3;
+   pos.push(...R0[i],...R0[j],...R1[i],...R1[j]);
+   const na=nn(pr.vv(i,e)),nb=nn(pr.vv(j,e));
+   nor.push(...na,...nb,...na,...nb);
+   idx.push(b,b+1,b+2,b+1,b+3,b+2)}
+  const nS=idx.length;
+  let dx=V[s+1][0]-V[s][0],dz=V[s+1][1]-V[s][1];const dl=Math.hypot(dx,dz)||1;dx/=dl;dz/=dl;
+  const cap=(Rg,sg)=>tris.forEach(t=>{const b=pos.length/3;t.forEach(i=>{pos.push(...Rg[i]);nor.push(sg*dx,0,sg*dz)});idx.push(b,b+1,b+2)});
+  if(s===0)cap(R0,-1);
+  if(s===ns-1)cap(R1,1);
+  for(let t=0;t<idx.length;t+=3){const a=idx[t],b=idx[t+1],c=idx[t+2];const ux=pos[b*3]-pos[a*3],uy=pos[b*3+1]-pos[a*3+1],uz=pos[b*3+2]-pos[a*3+2],vx=pos[c*3]-pos[a*3],vy=pos[c*3+1]-pos[a*3+1],vz=pos[c*3+2]-pos[a*3+2];const nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;if(nx*nor[a*3]+ny*nor[a*3+1]+nz*nor[a*3+2]<0){idx[t+1]=c;idx[t+2]=b}}
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+  g.setAttribute('normal',new THREE.Float32BufferAttribute(nor,3));
+  g.setIndex(idx);g.addGroup(0,nS,0);if(idx.length>nS)g.addGroup(nS,idx.length-nS,1);
+  const mm=new THREE.Mesh(g,[mk,mkc]);mm.castShadow=(s%2===0);out.push(mm)}
+ return out}
+const PATH=[[WL,0],[NA,0],[NA,ND],[NB,ND],[NB,0],[MR,0]];
+const NRMS=[[0,1],[-1,0],[0,1],[1,0],[0,1]];
+buildMold(sampleProfile(),PATH,NRMS,MY).forEach(o=>S.add(o));
+
+S.add(new THREE.HemisphereLight(0xffffff,0x6a6f85,.5));
+/* свет 5: справа и ниже, косой свет вдоль стены */
+const dl=new THREE.DirectionalLight(0xffffff,.6);dl.position.set(1.6,1.0,2.2);dl.target.position.set(-0.08,0.45,0);S.add(dl.target);dl.castShadow=true;const SM=Math.min(4096,R.capabilities.maxTextureSize||2048);dl.shadow.mapSize.set(SM,SM);R.shadowMap.autoUpdate=false;R.shadowMap.needsUpdate=true;dl.shadow.bias=-0.0004;dl.shadow.normalBias=0.001;Object.assign(dl.shadow.camera,{left:-0.5,right:0.5,top:0.5,bottom:-0.5,near:0.5,far:6});dl.shadow.camera.updateProjectionMatrix();S.add(dl);
+const dl2=new THREE.DirectionalLight(0xffffff,.1);dl2.position.set(3,2,1);S.add(dl2);
+/* вид на профиль: камера плавно подъезжает к торцу молдинга и обратно */
+const PH=Math.max(...PROFILE.map(p=>p[1])),PD=Math.max(...PROFILE.map(p=>p[0])),PK=PH*4.4;
+const VOV={p:cam.position.clone(),t:ctl.target.clone()};
+const VPR={t:new THREE.Vector3(MR,MY+PH/2,PD/2+OFF)};VPR.p=VPR.t.clone().add(new THREE.Vector3(.9395,.094,.3288).multiplyScalar(PK));
+const VCD={p:new THREE.Vector3(0.302,0.474,0.043),t:new THREE.Vector3(0.103,0.4697,0.0229)};
+let tw=null;
+function goView(V,done){tw={t0:performance.now(),p0:cam.position.clone(),q0:ctl.target.clone(),V:V,done:done};ctl.minDistance=.03;ctl.maxDistance=1.2}
+const lim=(a,b)=>()=>{ctl.minDistance=a;ctl.maxDistance=b};
+let inCard=false;const pvb=document.getElementById('pv0');
+pvb.onclick=()=>{if(tw)return;if(!inCard){inCard=true;pvb.textContent='Общий вид';goView(VCD,lim(.03,.5))}else{inCard=false;pvb.textContent='Вид карточки';goView(VOV,lim(.3,1.2))}};
+const hex=v=>new THREE.Color(v);
+cw.oninput=e=>mw.color=hex(e.target.value);ck.oninput=e=>{mk.color=hex(e.target.value)};
+function rs(){const w=innerWidth,h=innerHeight;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+addEventListener('resize',rs);rs();
+(function loop(){if(tw){const k=Math.min(1,(performance.now()-tw.t0)/900),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;cam.position.lerpVectors(tw.p0,tw.V.p,e);ctl.target.lerpVectors(tw.q0,tw.V.t,e);if(k>=1){const d=tw.done;tw=null;if(d)d()}}ctl.update();R.render(S,cam);requestAnimationFrame(loop)})();
+</script>

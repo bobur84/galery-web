@@ -9,36 +9,49 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{{page.title}}</title>
 <meta name="description" content="{{page.desc}}">
-<meta name="theme-color" content="#12151a">
+<meta name="theme-color" content="#1c3fd1">
 <!-- юридические страницы в поиске не нужны, но индексация ссылок с них — да -->
 <meta name="robots" content="noindex,follow">
 <link rel="canonical" href="{{canonical}}">
 {{alternates}}
-<link rel="stylesheet" href="/css/style.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%2312151a'/><text y='68' x='50' text-anchor='middle' font-size='58' font-family='Georgia,serif' fill='%23c9a961'>G</text></svg>">
+<link rel="stylesheet" href="/css/home.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232445c8'/><text y='70' x='50' text-anchor='middle' font-size='62' font-weight='800' font-family='Segoe UI,Arial,sans-serif' fill='%23ffffff'>G</text></svg>">
 </head>
 <body class="legal-page">
+<script>document.documentElement.classList.add('js')</script>
 
-<header class="nav solid">
+<header class="nav solid" id="nav" data-solid>
   <div class="wrap nav-in">
     <a href="/{{lang}}/" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
+    <nav class="nav-links">
+      <a href="/{{lang}}/#catalog">{{nav.directions}}</a>
+      <a href="/{{lang}}/#brands">{{nav.brands}}</a>
+      <a href="/{{lang}}/#services">{{nav.services}}</a>
+      <a href="/{{lang}}/#about">{{nav.about}}</a>
+      <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
+    </nav>
     <div class="nav-cta">
       {{lang_switch}}
-      <a href="/{{lang}}/" class="btn btn-ghost btn-sm">{{legal.back}}</a>
+      <a href="/{{lang}}/#contacts" class="btn">{{nav.cta}}</a>
+      <button class="burger" id="burger" aria-label="{{nav.menu_aria}}"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
 
-<main class="legal">
-  <div class="wrap legal-in">
-    <p class="eyebrow">{{legal.eyebrow}}</p>
-    <h1>{{page.h1}}</h1>
-    <p class="legal-updated">{{legal.updated_label}}: {{co.updated}}</p>
-
-    {{legal_body}}
-
-    <p class="legal-back"><a href="/{{lang}}/">← {{legal.back}}</a></p>
-  </div>
+<main>
+  <section class="lg-hero">
+    <div class="wrap">
+      <p class="crumbs"><a href="/{{lang}}/">{{legal.back}}</a><span>/</span>{{legal.eyebrow}}</p>
+      <h1>{{page.h1}}</h1>
+      <p class="legal-updated">{{legal.updated_label}}: {{co.updated}}</p>
+    </div>
+  </section>
+  <section class="legal">
+    <div class="wrap legal-in">
+      {{legal_body}}
+      <p class="legal-back"><a href="/{{lang}}/" class="btn btn-line">← {{legal.back}}</a></p>
+    </div>
+  </section>
 </main>
 
 <footer class="footer">
@@ -49,13 +62,15 @@
     </div>
     <nav class="foot-links">
       <a href="/{{lang}}/#catalog">{{nav.catalog}}</a>
+      <a href="/{{lang}}/#brands">{{nav.brands}}</a>
       <a href="/{{lang}}/#services">{{nav.services}}</a>
+      <a href="/{{lang}}/#about">{{nav.about}}</a>
       <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
       <a href="/{{lang}}/privacy/">{{legal.privacy_short}}</a>
       <a href="/{{lang}}/terms/">{{legal.terms_short}}</a>
     </nav>
     <div class="foot-staff">
-      <a href="https://office.galery.uz" class="btn btn-ghost btn-sm">{{foot.staff_btn}}</a>
+      <a href="https://office.galery.uz" class="btn btn-line-light btn-sm">{{foot.staff_btn}}</a>
       <p class="foot-note">{{foot.staff_note}}</p>
     </div>
   </div>
@@ -64,14 +79,6 @@
   </div>
 </footer>
 
-<script>
-document.getElementById('yr').textContent = new Date().getFullYear();
-document.querySelectorAll('.langs a').forEach(function(a){
-  a.addEventListener('click', function(){
-    document.cookie = 'lang=' + a.getAttribute('hreflang') +
-                      ';path=/;max-age=31536000;samesite=Lax';
-  });
-});
-</script>
+<script src="/js/site.js"></script>
 </body>
 </html>
