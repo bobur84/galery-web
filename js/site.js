@@ -23,17 +23,6 @@
     });
   });
 
-  // ---- каталоги брендов ----
-  // Каталоги (/nmc/, /tim/ …) собираются в другом репозитории и есть только на galery.uz.
-  // На тестовой копии (localhost, локальная сеть, временная ссылка) ведём на рабочий сайт.
-  // На galery.uz ничего не меняется.
-  if (!/(^|\.)galery\.uz$/.test(location.hostname)){
-    document.querySelectorAll('a.brand-ext').forEach(function(a){
-      a.href = 'https://galery.uz' + a.getAttribute('href');
-      a.target = '_blank'; a.rel = 'noopener';
-    });
-  }
-
   // ================= анимации =================
   var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (RM || !('IntersectionObserver' in window)) return;
