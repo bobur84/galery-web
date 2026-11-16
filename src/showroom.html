@@ -6,39 +6,23 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{{page.title}}</title>
 <meta name="description" content="{{page.desc}}">
-<meta name="theme-color" content="#2445c8">
+<meta name="theme-color" content="#c39a6b">
 <link rel="canonical" href="{{canonical}}">
 {{alternates}}
 <link rel="stylesheet" href="/css/home.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232445c8'/><text y='70' x='50' text-anchor='middle' font-size='62' font-weight='800' font-family='Segoe UI,Arial,sans-serif' fill='%23ffffff'>G</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%232b2622'/><text y='72' x='50' text-anchor='middle' font-size='66' font-family='Georgia,serif' fill='%23c39a6b'>G</text></svg>">
 </head>
 <body>
 <script>document.documentElement.classList.add('js')</script>
 
-<header class="nav solid" id="nav" data-solid>
-  <div class="wrap nav-in">
-    <a href="/{{lang}}/" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
-    <nav class="nav-links">
-      <a href="/{{lang}}/#catalog">{{nav.directions}}</a>
-      <a href="/{{lang}}/#brands">{{nav.brands}}</a>
-      <a href="/{{lang}}/#services">{{nav.services}}</a>
-      <a href="/{{lang}}/#about">{{nav.about}}</a>
-      <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
-    </nav>
-    <div class="nav-cta">
-      {{lang_switch}}
-      <a href="/{{lang}}/#contacts" class="btn">{{nav.cta}}</a>
-      <button class="burger" id="burger" aria-label="{{nav.menu_aria}}"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-</header>
+{{site_header}}
 
-<main class="page-top">
-  <section class="section" id="showroom" style="padding-top:40px">
+<main id="main">
+  <section class="section" id="showroom">
     <div class="wrap">
-      <p class="crumbs" style="color:var(--muted)"><a href="/{{lang}}/">{{legal.back}}</a><span>/</span><a href="/{{lang}}/plintusy/">{{cat.c1_t}}</a></p>
+      <p class="crumbs"><a href="/{{lang}}/">{{legal.back}}</a><span>/</span><a href="/{{lang}}/plintusy/">{{cat.c1_t}}</a></p>
       <div class="head">
-        <p class="eyebrow"><span class="num">3D</span>{{show.eyebrow}}</p>
+        <p class="eyebrow">{{show.eyebrow}}</p>
         <h2>{{!show.h2}}</h2>
         <p class="sub">{{show.sub}}</p>
       </div>
@@ -100,30 +84,7 @@
   </section>
 </main>
 
-<footer class="footer">
-  <div class="wrap footer-in">
-    <div>
-      <a href="/{{lang}}/" class="logo"><span class="logo-mark">G</span><span class="logo-txt">Galereya <em>Best</em></span></a>
-      <p class="foot-txt">{{foot.txt}}</p>
-    </div>
-    <nav class="foot-links">
-      <a href="/{{lang}}/#catalog">{{nav.catalog}}</a>
-      <a href="/{{lang}}/#brands">{{nav.brands}}</a>
-      <a href="/{{lang}}/#services">{{nav.services}}</a>
-      <a href="/{{lang}}/#about">{{nav.about}}</a>
-      <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
-      <a href="/{{lang}}/privacy/">{{legal.privacy_short}}</a>
-      <a href="/{{lang}}/terms/">{{legal.terms_short}}</a>
-    </nav>
-    <div class="foot-staff">
-      <a href="https://office.galery.uz" class="btn btn-line-light btn-sm">{{foot.staff_btn}}</a>
-      <p class="foot-note">{{foot.staff_note}}</p>
-    </div>
-  </div>
-  <div class="wrap copyright">
-    <span>© <span id="yr">2026</span> Galereya Best. {{foot.rights}}</span>
-  </div>
-</footer>
+{{site_footer}}
 
 <script src="/js/site.js"></script>
 <script>

@@ -42,8 +42,51 @@ LABELS = {"uz": "UZ", "ru": "RU", "en": "EN"}
 
 # Страницы сайта. slug — адрес внутри языка: "" это /ru/, "privacy" это /ru/privacy/.
 # doc — имя файла с текстом в legal/ (<doc>.<язык>.html); у главной его нет.
-# Иконки направлений в стиле чертежа (тот же порядок, что DIRECTIONS).
-ICONS = ['<path d="M10 80 L10 20 Q10 10 20 10 L50 10 L50 30 Q50 40 60 40 L90 40 Q100 60 120 64 L140 66 L140 80 Z"/>', '<path d="M10 70 L140 70 M10 50 L140 50 M10 30 L140 30 M50 30 L50 50 M100 50 L100 70 M80 10 L80 30 M10 10 L140 10"/>', '<path d="M14 10 L14 80 M38 10 L38 80 M62 10 L62 80 M86 10 L86 80 M110 10 L110 80 M134 10 L134 80"/>', '<path d="M30 40 L120 40 Q120 70 75 74 Q30 70 30 40 Z M75 40 L75 14 L95 14"/>', '<path d="M40 80 L40 10 L110 10 L110 80 M52 22 L98 22 L98 70 L52 70 Z M90 46 L94 46"/>']
+# Дизайн «Тёплая классика». Для каждого направления (тот же порядок, что DIRECTIONS):
+#   ICONS — линейная иконка вкладки «Пять направлений» (viewBox 0 0 48 48);
+#   ART   — рисунок в круге (viewBox 0 0 120 120). Это заглушки: когда появятся фото
+#           товаров, круг можно заменить на <img> (класс .circ-img в css/home.css).
+ICONS = [
+    '<path d="M6 8h9v32H6zM19.5 8h9v32h-9zM33 8h9v32h-9z"/>',
+    '<path d="M5 10h38v8H5zM5 22h38v8H5zM5 34h38v6H5M18 10v8M30 22v8M14 34v6"/>',
+    '<path d="M8 6v36M15 6v36M22 6v36M29 6v36M36 6v36"/>',
+    '<path d="M6 24h36q0 12-18 12T6 24zM24 24v-12h8v4"/>',
+    '<path d="M12 42V6h24v36M8 42h32M31 25h.5"/>',
+]
+ART = [
+    '<rect x="14" y="52" width="92" height="16" rx="2" fill="#fff" stroke="#c9bfb2" stroke-width="2"/>'
+    '<path d="M106 52l4 4-4 4" fill="none" stroke="#c9bfb2" stroke-width="2"/>',
+    '<g stroke="#a8754b" stroke-width="1.5"><rect x="14" y="40" width="92" height="40" fill="#c99a6b"/>'
+    '<path d="M14 53h92M14 67h92M44 40v13M78 53v14M36 67v13M90 67v13" fill="none"/></g>',
+    '<g fill="#efe9df" stroke="#c9bfb2" stroke-width="1.5"><rect x="22" y="30" width="14" height="60"/>'
+    '<rect x="38" y="30" width="14" height="60"/><rect x="54" y="30" width="14" height="60"/>'
+    '<rect x="70" y="30" width="14" height="60"/><rect x="86" y="30" width="12" height="60"/></g>',
+    '<path d="M24 62h72q0 22-36 22T24 62z" fill="#fff" stroke="#9b9187" stroke-width="2"/>'
+    '<path d="M64 62V44h10v6" fill="none" stroke="#9b9187" stroke-width="2.5"/>',
+    '<rect x="40" y="22" width="40" height="76" rx="1" fill="#efe9df" stroke="#c9bfb2" stroke-width="2"/>'
+    '<circle cx="73" cy="62" r="2" fill="#8a7d70"/>',
+]
+# Тон стены на заглушке «фото в интерьере» — свой у каждого направления.
+WALLS = ["#8f8070", "#94826c", "#8c8676", "#8a8580", "#8e7f72"]
+
+
+def scene(i=0):
+    """Заглушка фотографии: интерьер с молдингами на стене, диваном и деревом.
+    Когда будет настоящее фото — заменить вызов на <img> (класс .ph остаётся)."""
+    w = WALLS[i % len(WALLS)]
+    return (
+        '<svg class="ph-svg" viewBox="0 0 1440 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">'
+        '<rect width="1440" height="600" fill="%s"/>'
+        '<rect width="1440" height="600" fill="#fff" opacity=".08"/>'
+        '<g fill="none" stroke="#d8cfc3" stroke-width="12" opacity=".9">'
+        '<rect x="210" y="50" width="460" height="350"/><rect x="770" y="50" width="460" height="350"/></g>'
+        '<rect y="470" width="1440" height="130" fill="#d9d1c6"/><rect y="470" width="1440" height="10" fill="#c8bdb0"/>'
+        '<g fill="#cfc3b3"><rect x="350" y="300" width="600" height="110" rx="28"/>'
+        '<rect x="326" y="345" width="650" height="140" rx="26"/></g>'
+        '<rect x="1090" y="215" width="12" height="270" fill="#7a6a5a"/>'
+        '<circle cx="1096" cy="180" r="66" fill="#6f8a68"/>'
+        '</svg>' % w)
+
 
 # Пять направлений компании. У каждого — своя страница /<язык>/<slug>/, свой цвет
 # (класс d1…d5 в css/home.css) и список брендов. Тексты направления — ключи cat.<key>_t/_d
@@ -79,7 +122,9 @@ PLACEHOLDER = re.compile(r"\{\{(!?)([a-z][\w.]*)\}\}")
 GENERATED = {"lang", "canonical", "alternates", "lang_switch", "legal_body",
              "page.title", "page.desc", "page.h1",
              "dir.n", "dir.cls", "dir.t", "dir.d", "dir.tags", "dir.brand_list",
-             "dir.others_list", "dir.extra", "dir.icon"}
+             "dir.others_list", "dir.extra", "dir.scene",
+             "site_header", "site_footer", "dir_strip", "dir_circles", "dir_tabs",
+             "dir_panels", "hero_scene"}
 # Заполняются вручную в company.json; пока не заполнены — сборка предупреждает.
 UNSET = "— уточнить —"
 
@@ -131,12 +176,73 @@ def expand(text, words, lang, where):
 
     # Несколько проходов: значения словаря сами могут содержать плейсхолдеры —
     # например, текст согласия со ссылкой на /{{lang}}/privacy/.
-    for _ in range(3):
+    # Шапка — общий кусок с ключами внутри, в ней полоса направлений — тоже с ключами,
+    # поэтому проходов больше одного.
+    for _ in range(6):
         new = PLACEHOLDER.sub(sub, text)
         if new == text:
             break
         text = new
+    left = PLACEHOLDER.search(text)
+    if left:
+        raise KeyError("%s (%s): не подставлен %s" % (where, lang, left.group(0)))
     return text, used
+
+
+def brand_names(i):
+    """Подпись «бренды» направления. У дверей — переводимая строка cat.c6_tags."""
+    d = DIRECTIONS[i]
+    if d["key"] == "c6":
+        return "{{cat.c6_tags}}"
+    return html.escape(" · ".join(n for n, _ in d["brands"]))
+
+
+def dir_strip(lang, active):
+    """Полоса направлений под шапкой (на всех страницах) + 3D-шоурум."""
+    items = [(path(lang, d["slug"]), "{{cat.%s_t}}" % d["key"], d["slug"] == active)
+             for d in DIRECTIONS]
+    items.append((path(lang, "3d"), "{{bk.showroom}}", active == "3d"))
+    return "".join('<a href="%s"%s>%s</a>' % (
+        href, ' class="on" aria-current="page"' if on else "", label)
+        for href, label, on in items)
+
+
+def dir_circles(lang, skip=None):
+    """Круги с товарами: на главной — пять под героем, на странице направления —
+    «другие направления» (без текущего)."""
+    out = []
+    for i, d in enumerate(DIRECTIONS):
+        if i == skip:
+            continue
+        out.append('<a class="circ d%d" href="%s"><span class="circ-img">'
+                   '<svg viewBox="0 0 120 120" aria-hidden="true">%s</svg></span>'
+                   '<span class="circ-t">{{cat.%s_t}}</span></a>'
+                   % (i + 1, path(lang, d["slug"]), ART[i], d["key"]))
+    return "\n      ".join(out)
+
+
+def line_icon(i):
+    return ('<svg class="ticon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" '
+            'stroke-linejoin="round" aria-hidden="true">%s</svg>' % ICONS[i])
+
+
+def dir_tabs(lang):
+    """Главная: вкладки «Пять направлений» и панели под ними (без JS видны все панели)."""
+    tabs, panels = [], []
+    for i, d in enumerate(DIRECTIONS):
+        n = i + 1
+        tabs.append('<a class="dtab%s" href="#dp-%d" role="tab" aria-controls="dp-%d" aria-selected="%s">'
+                    '%s<span>{{cat.%s_t}}</span></a>'
+                    % (" on" if i == 0 else "", n, n, "true" if i == 0 else "false",
+                       line_icon(i), d["key"]))
+        panels.append('<div class="dpanel d%d" id="dp-%d" role="tabpanel">'
+                      '<div class="ph">%s</div><div class="wrap"><div class="dcard">'
+                      '<h3>{{cat.%s_t}}</h3><p>{{cat.%s_d}}</p>'
+                      '<p class="dbrands">{{cat.brands_lbl}}: %s</p>'
+                      '<a class="btn btn-white" href="%s">{{hero.btn_catalog}}</a></div></div></div>'
+                      % (n, n, scene(i), d["key"], d["key"], brand_names(i),
+                         path(lang, d["slug"])))
+    return "\n      ".join(tabs), "\n    ".join(panels)
 
 
 def direction_words(i, lang, words):
@@ -147,9 +253,7 @@ def direction_words(i, lang, words):
     esc = lambda t: html.escape(t, quote=True)
     t, desc = words["cat.%s_t" % k], words["cat.%s_d" % k]
     words["dir.n"] = "0%d" % (i + 1)
-    words["dir.icon"] = ('<svg class="dicon" viewBox="0 0 150 90" fill="none" stroke="currentColor" '
-                         'stroke-width="3" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true">'
-                         '%s</svg>' % ICONS[i])
+    words["dir.scene"] = scene(i)
     words["dir.cls"] = "d%d" % (i + 1)
     words["dir.t"] = esc(t)
     words["dir.d"] = esc(desc)
@@ -174,14 +278,7 @@ def direction_words(i, lang, words):
     words["dir.brand_list"] = "\n        ".join(cards)
     words["dir.tags"] = esc(" · ".join(n for n, _ in d["brands"]))
 
-    others = []
-    for j, o in enumerate(DIRECTIONS):
-        if j == i:
-            continue
-        others.append('<a class="dtile d%d" href="%s"><span class="dt-n">0%d</span>'
-                      '<span class="dt-t">%s</span><span class="dt-go" aria-hidden="true">→</span></a>'
-                      % (j + 1, path(lang, o["slug"]), j + 1, esc(words["cat.%s_t" % o["key"]])))
-    words["dir.others_list"] = "\n      ".join(others)
+    words["dir.others_list"] = dir_circles(lang, skip=i)
 
     # Плинтусы и молдинги: ссылка на 3D-каталог TRIMLINE
     words["dir.extra"] = ""
@@ -189,22 +286,31 @@ def direction_words(i, lang, words):
         words["dir.extra"] = (
             '<section class="promo3d"><div class="wrap promo3d-in">'
             '<div><p class="eyebrow">TRIMLINE · 3D</p><h2>%s</h2><p>%s</p></div>'
-            '<a class="btn btn-ink btn-lg" href="%s">%s</a></div></section>'
+            '<a class="btn btn-green btn-lg" href="%s">%s</a></div></section>'
             % (esc(words["dir.3d_t"]), esc(words["dir.3d_d"]), path(lang, "3d"),
                esc(words["dir.3d_btn"])))
-    used = {"cat.%s_t" % k, "cat.%s_d" % k, "dir.3d_t", "dir.3d_d", "dir.3d_btn"}
-    used |= {"cat.%s_t" % o["key"] for o in DIRECTIONS}
-    return used
+    return {"cat.%s_t" % k, "cat.%s_d" % k, "dir.3d_t", "dir.3d_d", "dir.3d_btn"}
 
 
 def render(page, lang, words, templates):
     slug, doc = page["slug"], page["doc"]
     words = dict(words)
+    # какой пункт полосы направлений подсветить: каталог TRIMLINE — это плинтусы
+    active = "plintusy" if slug == "trimline" else slug
+    tabs, panels = dir_tabs(lang)
     words.update({
         "lang": lang,
         "canonical": url(lang, slug),
         "alternates": alternates(slug),
         "lang_switch": lang_switch(lang, slug, words["nav.lang_aria"]),
+        # общие куски всех страниц: шапка с полосой направлений и подвал
+        "site_header": templates["partials/header.html"],
+        "site_footer": templates["partials/footer.html"],
+        "dir_strip": dir_strip(lang, active),
+        "dir_circles": dir_circles(lang),
+        "dir_tabs": tabs,
+        "dir_panels": panels,
+        "hero_scene": scene(0),
     })
 
     used = set()
@@ -257,8 +363,9 @@ def main():
     ap.add_argument("--out", default=str(HERE / "dist"), help="куда положить результат")
     args = ap.parse_args()
 
-    templates = {p["template"]: (HERE / "src" / p["template"]).read_text(encoding="utf-8")
-                 for p in PAGES}
+    templates = {t: (HERE / "src" / t).read_text(encoding="utf-8")
+                 for t in [p["template"] for p in PAGES]
+                 + ["partials/header.html", "partials/footer.html"]}
     company = {k: v for k, v in json.loads(
         (HERE / "company.json").read_text(encoding="utf-8")).items()
         if not k.startswith("_")}

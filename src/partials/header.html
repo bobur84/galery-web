@@ -1,0 +1,21 @@
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="/{{lang}}/" class="logo"><span class="logo-mark">G</span><span class="logo-txt"><b>Galereya Best</b><small>{{hero.eyebrow}}</small></span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="/{{lang}}/#catalog">{{nav.directions}}</a>
+      <a href="/{{lang}}/#about">{{nav.about}}</a>
+      <a href="/{{lang}}/#brands">{{nav.brands}}</a>
+      <a href="/{{lang}}/#services">{{nav.services}}</a>
+      <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
+    </nav>
+    <div class="nav-cta">
+      {{lang_switch}}
+      <a href="/{{lang}}/#contacts" class="btn btn-caramel">{{hero.btn_consult}}</a>
+      <button class="burger" id="burger" aria-label="{{nav.menu_aria}}" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <!-- полоса пяти направлений — на всех страницах -->
+  <nav class="strip" aria-label="{{nav.directions}}">
+    <div class="wrap strip-in">{{dir_strip}}</div>
+  </nav>
+</header>
