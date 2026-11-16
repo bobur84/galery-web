@@ -1,16 +1,16 @@
 <!doctype html>
-<!-- Страница направления. Название, описание и бренды подставляет сборка (DIRECTIONS в build.py). -->
+<!-- Страница направления. Название, описание, бренды и фото подставляет сборка (DIRECTIONS в build.py). -->
 <html lang="{{lang}}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{{page.title}}</title>
 <meta name="description" content="{{page.desc}}">
-<meta name="theme-color" content="#c39a6b">
+<meta name="theme-color" content="#161616">
 <link rel="canonical" href="{{canonical}}">
 {{alternates}}
 <link rel="stylesheet" href="/css/home.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='12' fill='%232b2622'/><text y='72' x='50' text-anchor='middle' font-size='66' font-family='Georgia,serif' fill='%23c39a6b'>G</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23161616'/><text y='72' x='50' text-anchor='middle' font-size='66' font-family='Georgia,serif' fill='%23b8976e'>G</text></svg>">
 </head>
 <body>
 <script>document.documentElement.classList.add('js')</script>
@@ -18,25 +18,30 @@
 {{site_header}}
 
 <main id="main" class="{{dir.cls}}">
-  <!-- шапка направления: фото в интерьере (пока заглушка .ph) и карточка с текстом -->
+  <!-- шапка направления: фото на всю ширину и текст поверх -->
   <section class="dhero">
-    <div class="ph">{{dir.scene}}</div>
-    <div class="wrap">
-      <div class="dcard dcard-lg">
-        <p class="crumbs"><a href="/{{lang}}/">{{legal.back}}</a><span>/</span><a href="/{{lang}}/#catalog">{{nav.directions}}</a></p>
-        <p class="eyebrow eyebrow-light"><span class="num">{{dir.n}}</span>{{dir.eyebrow}}</p>
-        <h1>{{dir.t}}</h1>
-        <p>{{dir.d}}</p>
-        <p class="dbrands">{{dir.tags}}</p>
-        <div class="hero-btns">
-          <a href="#dir-brands" class="btn btn-white">{{dir.brands}}</a>
-          <a href="/{{lang}}/#contacts" class="btn btn-line-light">{{hero.btn_consult}}</a>
-        </div>
+    {{dir.photo}}
+    <div class="wrap dhero-in">
+      <p class="crumbs crumbs-light"><a href="/{{lang}}/">{{legal.back}}</a><span>/</span><a href="/{{lang}}/#catalog">{{nav.directions}}</a></p>
+      <p class="eyebrow eyebrow-light"><span class="num">{{dir.n}}</span>{{dir.eyebrow}}</p>
+      <h1>{{dir.t}}</h1>
+      <p class="lead">{{dir.d}}</p>
+      <p class="tags">{{dir.tags}}</p>
+      <div class="hero-btns">
+        <a href="#dir-brands" class="btn btn-light">{{dir.brands}}</a>
+        <a href="/{{lang}}/#contacts" class="btn btn-line-light">{{hero.btn_consult}}</a>
       </div>
     </div>
   </section>
 
-  <section class="section" id="dir-brands">
+  <!-- примеры в интерьере: три фото -->
+  <section class="section section-tight">
+    <div class="wrap gallery">
+      {{dir.gallery}}
+    </div>
+  </section>
+
+  <section class="section section-soft" id="dir-brands">
     <div class="wrap">
       <div class="head head-c">
         <h2>{{dir.brands}}</h2>
@@ -50,17 +55,17 @@
 
   {{dir.extra}}
 
-  <section class="cta-band">
+  <section class="cta-dark">
     <div class="wrap cta-in">
       <div><h2>{{dir.cta_h}}</h2><p>{{dir.cta_d}}</p></div>
-      <a href="/{{lang}}/#contacts" class="btn btn-white btn-lg">{{nav.cta}}</a>
+      <a href="/{{lang}}/#contacts" class="btn btn-light">{{nav.cta}}</a>
     </div>
   </section>
 
   <section class="section">
     <div class="wrap">
       <div class="head head-c"><h2>{{dir.others}}</h2></div>
-      <div class="circles circles-4">
+      <div class="tiles tiles-4">
       {{dir.others_list}}
       </div>
     </div>

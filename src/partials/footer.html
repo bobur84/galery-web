@@ -1,20 +1,22 @@
 <footer class="footer">
   <div class="wrap footer-in">
-    <div>
+    <div class="foot-brand">
       <a href="/{{lang}}/" class="logo logo-light"><span class="logo-mark">G</span><span class="logo-txt"><b>Galereya Best</b><small>{{hero.eyebrow}}</small></span></a>
       <p class="foot-txt">{{foot.txt}}</p>
+      <p class="foot-addr">{{con.addr_val}}<br>{{con.hours_val}}<br><a href="mailto:{{co.email}}">{{co.email}}</a></p>
     </div>
-    <nav class="foot-links">
-      <a href="/{{lang}}/#catalog">{{nav.catalog}}</a>
+    <nav class="foot-links" aria-label="{{nav.catalog}}">
+      <b>{{nav.catalog}}</b>
+      {{dir_strip}}
+    </nav>
+    <nav class="foot-links" aria-label="Galereya Best">
+      <b>Galereya Best</b>
       <a href="/{{lang}}/#brands">{{nav.brands}}</a>
       <a href="/{{lang}}/#services">{{nav.services}}</a>
       <a href="/{{lang}}/#about">{{nav.about}}</a>
       <a href="/{{lang}}/#contacts">{{nav.contacts}}</a>
       <a href="/{{lang}}/privacy/">{{legal.privacy_short}}</a>
       <a href="/{{lang}}/terms/">{{legal.terms_short}}</a>
-    </nav>
-    <nav class="foot-links foot-dirs">
-      {{dir_strip}}
     </nav>
     <div class="foot-staff">
       <a href="https://office.galery.uz" class="btn btn-line-light btn-sm">{{foot.staff_btn}}</a>

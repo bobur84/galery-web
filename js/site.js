@@ -1,8 +1,9 @@
-/* Общий скрипт всех страниц: шапка, языки, вкладки направлений, поиск, анимации.
+/* Общий скрипт всех страниц: шапка, языки, слайдер, лента товаров, поиск, анимации.
    Тексты не меняет: счётчик цифр в конце возвращает исходную строку как есть. */
 (function(){
   var yr = document.getElementById('yr');
   if (yr) yr.textContent = new Date().getFullYear();
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ---- шапка: меню на телефоне ----
   var nav = document.getElementById('nav'), burger = document.getElementById('burger');
@@ -19,7 +20,7 @@
   }
   // активный пункт полосы направлений — в зоне видимости (на телефоне полоса прокручивается)
   var on = document.querySelector('.strip a.on');
-  if (on && on.scrollIntoView) on.parentNode.scrollLeft = on.offsetLeft - 24;
+  if (on) on.parentNode.scrollLeft = on.offsetLeft - 24;
 
   // ---- выбор языка: cookie для nginx ----
   document.querySelectorAll('.langs a').forEach(function(a){
@@ -28,29 +29,29 @@
     });
   });
 
-  // ---- главная: вкладки «Пять направлений» ----
-  var tabs = document.querySelectorAll('.dtab');
-  if (tabs.length){
-    var panels = document.querySelectorAll('.dpanel');
-    var show = function(tab, focus){
-      tabs.forEach(function(t){
-        var sel = t === tab;
-        t.classList.toggle('on', sel);
-        t.setAttribute('aria-selected', sel ? 'true' : 'false');
-        t.tabIndex = sel ? 0 : -1;
-      });
-      var id = tab.getAttribute('aria-controls');
-      panels.forEach(function(p){ p.hidden = p.id !== id; });
-      if (focus) tab.focus();
+  // ---- главная: слайдер фото в герое ----
+  var slides = document.querySelectorAll('#slides .slide'), dots = document.querySelectorAll('#dots button');
+  if (slides.length > 1){
+    var cur = 0, timer = null;
+    var go = function(n){
+      cur = (n + slides.length) % slides.length;
+      slides.forEach(function(s, i){ s.classList.toggle('on', i === cur); });
+      dots.forEach(function(d, i){ d.classList.toggle('on', i === cur); });
     };
-    tabs.forEach(function(t, i){
-      t.addEventListener('click', function(e){ e.preventDefault(); show(t); });
-      t.addEventListener('keydown', function(e){
-        var k = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-        if (k){ e.preventDefault(); show(tabs[(i + k + tabs.length) % tabs.length], true); }
+    var play = function(){ if (!RM){ clearInterval(timer); timer = setInterval(function(){ go(cur + 1); }, 6000); } };
+    dots.forEach(function(d, i){ d.addEventListener('click', function(){ go(i); play(); }); });
+    play();
+  }
+
+  // ---- лента товаров: стрелки ----
+  var prow = document.getElementById('prow');
+  if (prow){
+    document.querySelectorAll('.arr').forEach(function(b){
+      b.addEventListener('click', function(){
+        var card = prow.querySelector('.pcard'), step = card ? card.offsetWidth + 24 : 300;
+        prow.scrollBy({left: step * +b.getAttribute('data-dir'), behavior: RM ? 'auto' : 'smooth'});
       });
     });
-    show(tabs[0]);
   }
 
   // ---- главная: поиск по направлениям, брендам и кодам TRIMLINE ----
@@ -91,7 +92,6 @@
   }
 
   // ================= анимации =================
-  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (RM || !('IntersectionObserver' in window)) return;
 
   // «4 500+», «20+», «5»: считает до числа и возвращает исходный текст
@@ -108,7 +108,7 @@
     })(t0);
   }
 
-  document.querySelectorAll('.circ,.feat,.stat,.brand-link,.brand-card,.contact-card,.form-card,.head').forEach(function(el){
+  document.querySelectorAll('.tile,.feat,.stat,.brand-link,.brand-card,.contact-card,.form-card,.head,.gallery .ph,.mosaic>div,.split-txt').forEach(function(el){
     el.classList.add('rise');
   });
   var io = new IntersectionObserver(function(es){
@@ -118,6 +118,6 @@
       if (e.target.tagName === 'B') countUp(e.target);
       io.unobserve(e.target);
     });
-  }, {threshold:0.12, rootMargin:'0px 0px -5% 0px'});
-  document.querySelectorAll('.rise,.stat b,.hero-stats b').forEach(function(el){ io.observe(el); });
+  }, {threshold:0.1, rootMargin:'0px 0px -5% 0px'});
+  document.querySelectorAll('.rise,.stat b,.facts b').forEach(function(el){ io.observe(el); });
 })();
