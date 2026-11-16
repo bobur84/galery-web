@@ -100,7 +100,7 @@
 var G=document.getElementById('grid'), TB=document.getElementById('m-tbl');
 var ITEMS=[].map.call(document.querySelectorAll('#items li'),function(li){
   return {code:li.dataset.code, cat:li.dataset.cat, size:li.dataset.size, len:li.dataset.len,
-          stock:li.dataset.stock==="1", hit:li.dataset.hit==="1", photo:li.dataset.photo||"",
+          stock:li.dataset.stock, hit:li.dataset.hit==="1", photo:li.dataset.photo||"", crop:li.dataset.crop||"",
           ph:li.dataset.ph, phdesc:li.dataset.desc, profile:li.dataset.profile||"",
           name:li.querySelector('.n').textContent, desc:li.querySelector('.d').textContent};
 });
@@ -115,31 +115,31 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp
 function draw(it){ return '<svg class="prof-svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true">'+ICON[it.cat]+'</svg>'; }
 /* Фото товара: файл из photos.json или подписанная заглушка «ФОТО M21» */
 function photo(it){
-  if (it.photo) return '<figure class="ph has-img"><img src="'+esc(it.photo)+'" alt="'+esc(it.name)+'" loading="lazy"></figure>';
+  if (it.photo) return '<figure class="ph has-img"><img src="'+esc(it.photo)+'" alt="'+esc(it.name)+'"'+(it.crop?' class="crop-'+esc(it.crop)+'"':'')+' loading="lazy"></figure>';
   return '<figure class="ph"><figcaption class="ph-cap"><b>ФОТО '+esc(it.ph)+'</b><span>'+esc(it.phdesc)+'</span></figcaption></figure>';
 }
 var cat="all";
 function render(){
   var q=document.getElementById('q').value.trim().toLowerCase(), only=document.getElementById('only').checked;
   var list=ITEMS.filter(function(it){
-    return (cat==="all"||it.cat===cat) && (!only||it.stock) &&
+    return (cat==="all"||it.cat===cat) && (!only||it.stock==="1") &&
       (!q || (it.code+" "+it.name+" "+it.size).toLowerCase().indexOf(q)>-1);
   });
   G.innerHTML=list.map(function(it){
     var type=it.name.split(' · ')[1]||'';
     return '<button class="bk-card" data-i="'+ITEMS.indexOf(it)+'">'+
-      '<div class="pc-img">'+photo(it)+'<span class="pc-prof">'+draw(it)+'</span>'+
+      '<div class="pc-img">'+photo(it)+(it.photo?'':'<span class="pc-prof">'+draw(it)+'</span>')+
       (it.hit?'<span class="pc-hit">'+esc(G.dataset.hit)+'</span>':'')+'</div>'+
       '<div class="pc-b"><span class="pc-code">'+esc(it.code)+'<i>|</i>'+esc(type)+'</span>'+
       '<span class="pc-size">'+esc(it.size)+' · '+esc(it.len)+'</span>'+
-      '<span class="pc-stock '+(it.stock?'in':'out')+'">'+esc(it.stock?G.dataset.in:G.dataset.out)+'</span></div></button>';
+      (it.stock?'<span class="pc-stock '+(it.stock==='1'?'in':'out')+'">'+esc(it.stock==='1'?G.dataset.in:G.dataset.out)+'</span>':'')+'</div></button>';
   }).join('');
   var c=document.getElementById('count');
   c.textContent=c.dataset.of.replace('{n}',list.length).replace('{m}',ITEMS.length);
   document.getElementById('empty').style.display=list.length?'none':'block';
 }
 document.getElementById('st-all').textContent=ITEMS.length;
-document.getElementById('st-in').textContent=ITEMS.filter(function(x){return x.stock}).length;
+document.getElementById('st-in').textContent=ITEMS.filter(function(x){return x.stock==="1"}).length;
 document.getElementById('tabs').addEventListener('click',function(e){
   var b=e.target.closest('.bk-tab'); if(!b) return;
   [].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)}); cat=b.dataset.cat; render();
@@ -156,8 +156,12 @@ G.addEventListener('click',function(e){
   document.getElementById('m-sub').textContent=it.name;
   document.getElementById('m-d').textContent=it.desc;
   document.getElementById('m-photo').innerHTML=photo(it)+'<span>'+esc(G.dataset.photo)+'</span>';
-  document.getElementById('m-draw').innerHTML=(it.profile?'<img src="'+esc(it.profile)+'" alt="">':draw(it))+'<span>'+esc(G.dataset.draw)+'</span>';
-  TB.innerHTML=[[L.code,it.code],[L.name,it.name],[L.size,it.size],[L.len,it.len],[L.stock,it.stock?L.in:L.out]]
+  /* чертёж: настоящий (profile) или схема — только пока нет фото */
+  var md=document.getElementById('m-draw'); md.hidden=!!(it.photo&&!it.profile);
+  md.innerHTML=(it.profile?'<img src="'+esc(it.profile)+'" alt="">':draw(it))+'<span>'+esc(G.dataset.draw)+'</span>';
+  var rows=[[L.code,it.code],[L.name,it.name],[L.size,it.size],[L.len,it.len]];
+  if(it.stock) rows.push([L.stock,it.stock==='1'?L.in:L.out]);
+  TB.innerHTML=rows
     .map(function(r){return '<tr><th>'+esc(r[0])+'</th><td>'+esc(r[1])+'</td></tr>'}).join('');
   modal.classList.add('open'); document.getElementById('m-x').focus();
 });

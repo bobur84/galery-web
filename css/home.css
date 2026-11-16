@@ -196,6 +196,11 @@ em{font-style:italic;color:var(--bronze)}
 /* карточка товара: фото, при наведении — схема профиля; ниже «код | тип», размеры */
 .pcard,.bk-card{display:flex;flex-direction:column;background:#fff;text-align:left;color:inherit;font:inherit;padding:0;border:0;cursor:pointer}
 .pc-img{position:relative;aspect-ratio:1/1;overflow:hidden}
+.pc-img .has-img img{transition:transform .8s var(--ease)}
+.pcard:hover .has-img img,.bk-card:hover .has-img img{transform:scale(1.06)}
+/* фото с белой полосой слева (photos.json: crop "right"): прижать вправо и чуть увеличить */
+.ph img.crop-right{object-position:100% 50%;transform-origin:100% 50%;transform:scale(1.17)}
+.pcard:hover .has-img img.crop-right,.bk-card:hover .has-img img.crop-right{transform:scale(1.23)}
 .pc-img .ph{position:absolute;inset:0}
 .pc-img .ph-cap b{font-size:20px}
 .pc-img .ph-cap span{font-size:11.5px}
@@ -345,6 +350,9 @@ a.brand-card:hover i{color:#fff}
 .bk-pic .ph{position:absolute;inset:0}
 .bk-pic>span{position:absolute;bottom:10px;left:14px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);z-index:2}
 .bk-pic-draw{background:#fff;border-top:1px solid var(--line)}
+.bk-pic[hidden]{display:none}
+.bk-pics:has(.bk-pic-draw[hidden]){grid-template-rows:1fr}
+.bk-pics:has(.bk-pic-draw[hidden]) .bk-pic{min-height:420px}
 .bk-pic-draw .prof-svg{width:46%;height:auto;max-height:200px}
 .bk-det{padding:44px 40px 36px}
 .bk-det h2{font-size:48px;margin-bottom:4px}

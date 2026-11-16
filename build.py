@@ -56,8 +56,9 @@ def photo(pid, cls=""):
     item = PHOTOS[pid]
     label = html.escape(item.get("label", pid))
     if item.get("file"):
-        return ('<figure class="ph has-img %s"><img src="/img/photos/%s" alt="" loading="lazy"></figure>'
-                % (cls, html.escape(item["file"], quote=True)))
+        crop = ' class="crop-%s"' % item["crop"] if item.get("crop") else ""
+        return ('<figure class="ph has-img %s"><img src="/img/photos/%s" alt=""%s loading="lazy"></figure>'
+                % (cls, html.escape(item["file"], quote=True), crop))
     return ('<figure class="ph %s" data-photo="%s"><figcaption class="ph-cap">'
             '<b>ФОТО %s</b><span>%s</span></figcaption></figure>'
             % (cls, label, label, html.escape(item["desc"])))
@@ -72,18 +73,29 @@ PROFILE = {
     "cornice": '<path d="M15 15 L85 15 L85 30 Q60 35 50 55 Q40 75 30 80 L15 85 Z"/>',
 }
 
-# Товары TRIMLINE (пример каталога): лента на главной, на странице плинтусов и сам каталог.
-# (код, фото-id, тип, размер, в наличии, хит, ключ описания)
-PRODUCTS = [
-    ("M21", "M21", "moulding", "25×14 {{unit.mm}}", 1, 1, "bk.i1"),
-    ("M13", "M13", "moulding", "40×18 {{unit.mm}}", 1, 1, "bk.i2"),
-    ("M30", "M30", "moulding", "60×20 {{unit.mm}}", 0, 0, "bk.i3"),
-    ("W9", "W9", "panel", "{{bk.size_cat}}", 1, 1, "bk.i4"),
-    ("W12", "W12", "panel", "{{bk.size_cat}}", 0, 0, "bk.i5"),
-    ("P7", "P7", "plinth", "80×15 {{unit.mm}}", 1, 0, "bk.i6"),
-    ("P10", "P10", "plinth", "100×16 {{unit.mm}}", 1, 0, "bk.i7"),
-    ("C-3", "C3", "cornice", "220×92 {{unit.mm}}", 1, 1, "bk.i8"),
-]
+# Товары TRIMLINE — все модели 3D-каталога. Фото — из photos.json (id = код без дефиса).
+# Размеры известны не у всех: остальные «по каталогу». Наличие (1 — есть, 0 — под заказ)
+# указано только там, где оно известно; None — пометку не показываем.
+# Описание: своё у части моделей (bk.i*), у остальных — общее для типа (show.d*).
+SIZES = {"M11": "25×12", "M13": "40×18", "M21": "25×14", "P7": "80×15", "P10": "100×16",
+         "C-1": "70×40", "C-2": "71×41", "C-3": "220×92"}
+STOCK = {"M21": 1, "M13": 1, "W9": 1, "P7": 1, "P10": 1, "C-3": 1}
+HITS = {"M21", "M13", "W9", "C-3"}
+DESC = {"M21": "bk.i1", "M13": "bk.i2", "M56": "bk.i3", "W9": "bk.i4",
+        "P7": "bk.i6", "P10": "bk.i7", "C-3": "bk.i8"}
+TYPE_DESC = {"moulding": "show.d1", "panel": "show.d2", "plinth": "show.d3", "cornice": "show.d4"}
+MODELS = [("moulding", ["M11", "M12", "M13", "M21", "M22", "M23", "M31", "M32", "M33",
+                        "M41", "M42", "M43", "M51", "M52", "M53", "M54", "M55", "M56"]),
+          ("panel", ["W%d" % i for i in range(1, 11)]),
+          ("plinth", ["P%d" % i for i in range(1, 12)]),
+          ("cornice", ["C-1", "C-2", "C-3"])]
+# (код, фото-id, тип, размер, наличие, хит, ключ описания)
+PRODUCTS = [(c, c.replace("-", ""), cat,
+             "%s {{unit.mm}}" % SIZES[c] if c in SIZES else "{{bk.size_cat}}",
+             STOCK.get(c), 1 if c in HITS else 0, DESC.get(c, TYPE_DESC[cat]))
+            for cat, codes in MODELS for c in codes]
+# Лента товаров на главной и на странице плинтусов
+RIBBON = ["M11", "M13", "M21", "M33", "M42", "M56", "P1", "P5", "P7", "P10", "C-1", "C-3"]
 
 
 def profile_svg(cat):
@@ -231,13 +243,16 @@ def dir_tiles(lang, skip=None):
 
 
 def products_row(lang):
-    """Лента товаров TRIMLINE: фото товара, при наведении — схема профиля."""
+    """Лента товаров TRIMLINE. Без фото — заглушка, при наведении схема профиля."""
     out = []
     for code, pid, cat, size, stock, hit, _ in PRODUCTS:
-        out.append('<a class="pcard" href="%s?q=%s"><div class="pc-img">%s<span class="pc-prof">%s</span>%s</div>'
+        if code not in RIBBON:
+            continue
+        prof = "" if PHOTOS[pid].get("file") else '<span class="pc-prof">%s</span>' % profile_svg(cat)
+        out.append('<a class="pcard" href="%s?q=%s"><div class="pc-img">%s%s%s</div>'
                    '<div class="pc-b"><span class="pc-code">%s<i>|</i>{{bk.n_%s}}</span>'
                    '<span class="pc-size">%s</span></div></a>'
-                   % (path(lang, "trimline"), code, photo(pid), profile_svg(cat),
+                   % (path(lang, "trimline"), code, photo(pid), prof,
                       '<span class="pc-hit">{{bk.hit}}</span>' if hit else "", code, cat, size))
     return "\n        ".join(out)
 
@@ -249,9 +264,10 @@ def bk_items():
         item = PHOTOS[pid]
         src = "/img/photos/" + item["file"] if item.get("file") else ""
         out.append('<li data-code="%s" data-cat="%s" data-size="%s" data-len="2400 {{unit.mm}}" '
-                   'data-stock="%d" data-hit="%d" data-photo="%s" data-ph="%s" data-desc="%s">'
+                   'data-stock="%s" data-hit="%d" data-photo="%s" data-crop="%s" data-ph="%s" data-desc="%s">'
                    '<span class="n">TRIMLINE %s · {{bk.n_%s}}</span><span class="d">{{%s}}</span></li>'
-                   % (code, cat, size, stock, hit, html.escape(src, quote=True),
+                   % (code, cat, size, "" if stock is None else stock, hit,
+                      html.escape(src, quote=True), html.escape(item.get("crop", ""), quote=True),
                       html.escape(item.get("label", pid), quote=True),
                       html.escape(item["desc"], quote=True), code, cat, desc))
     return "\n  ".join(out)
