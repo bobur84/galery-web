@@ -148,6 +148,11 @@ em{font-style:italic;color:var(--bronze)}
 /* ---------- плитки направлений ---------- */
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:28px 24px}
 .tiles-4{grid-template-columns:repeat(4,1fr)}
+/* главная: пять направлений — два крупных сверху, три снизу */
+.tiles-5{grid-template-columns:repeat(6,1fr)}
+.tiles-5 .tile{grid-column:span 2}
+.tiles-5 .tile:nth-child(-n+2){grid-column:span 3}
+.tiles-5 .tile:nth-child(-n+2) .ph{aspect-ratio:3/2}
 .tile{display:flex;flex-direction:column;background:#fff}
 .tile .ph{aspect-ratio:4/5}
 .tile:hover .ph img{transform:scale(1.06)}
@@ -434,7 +439,9 @@ a.brand-card:hover i{color:#fff}
   .nav.open .nav-links{display:flex}
   .nav-links a{border-bottom:1px solid var(--line);padding:16px 0;font-size:13px}
   .nav-cta{margin-left:auto}
-  .tiles,.tiles-4{grid-template-columns:repeat(2,1fr)}
+  .tiles,.tiles-4,.tiles-5{grid-template-columns:repeat(2,1fr)}
+  .tiles-5 .tile,.tiles-5 .tile:nth-child(-n+2){grid-column:auto}
+  .tiles-5 .tile:first-child{grid-column:span 2}
   .feats{grid-template-columns:repeat(2,1fr)}
   .split,.about-grid,.contact-wrap,.show-grid,.bk-hero{grid-template-columns:1fr}
   .split-img .ph{height:auto;aspect-ratio:4/3}
@@ -463,7 +470,8 @@ a.brand-card:hover i{color:#fff}
   .facts b{font-size:34px}
   .facts-in div{padding:28px 6px}
   .facts span{font-size:9.5px;letter-spacing:.12em}
-  .tiles{grid-template-columns:1fr}
+  .tiles,.tiles-5{grid-template-columns:1fr}
+  .tiles-5 .tile:first-child{grid-column:auto}
   .tiles-4{grid-template-columns:1fr 1fr;gap:20px 12px}
   .tiles-4 .tile h3{font-size:19px}
   .prow{grid-auto-columns:72%}

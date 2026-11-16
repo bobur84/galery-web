@@ -213,8 +213,7 @@ def dir_strip(lang, active):
 
 
 def dir_tiles(lang, skip=None):
-    """Плитки направлений с фото (ФОТО 4–8) и плитка 3D-шоурума (ФОТО 9).
-    На странице направления — без текущего и без 3D."""
+    """Плитки пяти направлений с фото (ФОТО 4–8). На странице направления — без текущего."""
     out = []
     for i, d in enumerate(DIRECTIONS):
         if i == skip:
@@ -224,11 +223,6 @@ def dir_tiles(lang, skip=None):
                    '<span class="tile-go">{{hero.btn_catalog}} <i aria-hidden="true">→</i></span></div></a>'
                    % (path(lang, d["slug"]), photo(str(4 + i)), i + 1, d["key"], d["key"],
                       brand_names(i)))
-    if skip is None:
-        out.append('<a class="tile tile-3d" href="%s">%s<div class="tile-b"><span class="tile-n">3D</span>'
-                   '<h3>{{dir.3d_t}}</h3><p>{{dir.3d_d}}</p><span class="tile-br">TRIMLINE</span>'
-                   '<span class="tile-go">{{dir.3d_btn}} <i aria-hidden="true">→</i></span></div></a>'
-                   % (path(lang, "3d"), photo("9")))
     return "\n      ".join(out)
 
 
