@@ -126,7 +126,7 @@ GENERATED = {"lang", "canonical", "alternates", "lang_switch", "legal_body",
              "page.title", "page.desc", "page.h1",
              "dir.n", "dir.cls", "dir.t", "dir.d", "dir.tags", "dir.brand_list",
              "dir.others_list", "dir.extra", "dir.gallery", "dir.photo",
-             "site_header", "site_footer", "dir_strip", "dir_tiles", "products",
+             "site_header", "site_footer", "dir_strip", "foot_dirs", "dir_tiles", "products",
              "bk_items"}
 # Заполняются вручную в company.json; пока не заполнены — сборка предупреждает.
 UNSET = "— уточнить —"
@@ -202,14 +202,18 @@ def brand_names(i):
     return html.escape(" · ".join(n for n, _ in d["brands"]))
 
 
+def dir_links(lang, active):
+    """Ссылки на пять направлений (текущее подсвечено)."""
+    return "".join('<a href="%s"%s>{{cat.%s_t}}</a>' % (
+        path(lang, d["slug"]), ' class="on" aria-current="page"' if d["slug"] == active else "",
+        d["key"]) for d in DIRECTIONS)
+
+
 def dir_strip(lang, active):
-    """Полоса направлений под шапкой (на всех страницах) + 3D-шоурум."""
-    items = [(path(lang, d["slug"]), "{{cat.%s_t}}" % d["key"], d["slug"] == active)
-             for d in DIRECTIONS]
-    items.append((path(lang, "3d"), "{{bk.showroom}}", active == "3d"))
-    return "".join('<a href="%s"%s>%s</a>' % (
-        href, ' class="on" aria-current="page"' if on else "", label)
-        for href, label, on in items)
+    """Полоса под шапкой: пять направлений, справа отдельно — кнопка 3D-шоурума."""
+    return ('<div class="strip-dirs">%s</div><a class="strip-3d%s" href="%s">'
+            '<span class="strip-3d-i" aria-hidden="true">3D</span>{{bk.showroom}}</a>'
+            % (dir_links(lang, active), " on" if active == "3d" else "", path(lang, "3d")))
 
 
 def dir_tiles(lang, skip=None):
@@ -317,6 +321,7 @@ def render(page, lang, words, templates):
         "site_header": templates["partials/header.html"],
         "site_footer": templates["partials/footer.html"],
         "dir_strip": dir_strip(lang, active),
+        "foot_dirs": dir_links(lang, active),
         "dir_tiles": dir_tiles(lang),
         "products": products_row(lang),
         "bk_items": bk_items(),

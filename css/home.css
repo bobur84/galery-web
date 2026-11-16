@@ -97,14 +97,19 @@ em{font-style:italic;color:var(--bronze)}
 .nav.open .burger span:nth-child(2){opacity:0}
 .nav.open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
 
-/* полоса пяти направлений — главный акцент: тёмная, на всех страницах */
+/* полоса пяти направлений — главный акцент: тёмная, на всех страницах.
+   Пять направлений равномерно по ширине, 3D-шоурум — отдельная бронзовая кнопка справа */
 .strip{background:var(--ink)}
-.strip-in{display:flex;justify-content:space-between;gap:12px}
-.strip a{position:relative;color:#d9d3cb;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:15px 0;white-space:nowrap;transition:color .25s}
-.strip a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--bronze-l);transform:scaleX(0);transition:transform .35s var(--ease)}
-.strip a:hover{color:#fff}
-.strip a:hover::after,.strip a.on::after{transform:scaleX(1)}
-.strip a.on{color:#fff}
+.strip-in{display:flex;align-items:stretch;gap:40px}
+.strip-dirs{flex:1;display:flex;justify-content:space-between;gap:28px}
+.strip-dirs a{position:relative;color:#d9d3cb;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:16px 0;white-space:nowrap;transition:color .25s}
+.strip-dirs a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--bronze-l);transform:scaleX(0);transition:transform .35s var(--ease)}
+.strip-dirs a:hover{color:#fff}
+.strip-dirs a:hover::after,.strip-dirs a.on::after{transform:scaleX(1)}
+.strip-dirs a.on{color:#fff}
+.strip-3d{display:flex;align-items:center;gap:10px;padding:0 20px;background:var(--bronze);color:#fff;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;transition:background .25s}
+.strip-3d:hover,.strip-3d.on{background:var(--bronze-l);color:var(--ink)}
+.strip-3d-i{display:grid;place-items:center;width:28px;height:28px;border:1px solid currentColor;border-radius:50%;font-family:var(--serif);font-size:12px;letter-spacing:0}
 
 /* ---------- места под фото ---------- */
 .ph{position:relative;overflow:hidden;margin:0;background:repeating-linear-gradient(135deg,var(--ph1) 0 16px,var(--ph2) 16px 32px);min-height:120px}
@@ -425,8 +430,9 @@ a.brand-card:hover i{color:#fff}
 /* ---------- адаптив ---------- */
 @media (max-width:1240px){
   .nav-links{gap:20px}
-  .strip-in{overflow-x:auto;gap:36px;scrollbar-width:none}
-  .strip-in::-webkit-scrollbar{display:none}
+  .strip-dirs{overflow-x:auto;gap:32px;justify-content:flex-start;scrollbar-width:none}
+  .strip-dirs::-webkit-scrollbar{display:none}
+  .strip-in{gap:20px}
   .brands{grid-template-columns:repeat(4,1fr)}
   .prow{grid-auto-columns:calc((100% - 48px)/3)}
   .bk-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -460,7 +466,10 @@ a.brand-card:hover i{color:#fff}
   .logo-txt b{font-size:20px}
   .logo-txt small{display:none}
   .nav-cta .btn-dark{display:none}
-  .strip a{font-size:11px;padding:13px 0}
+  .strip-dirs a{font-size:11px;padding:13px 0}
+  .strip-in{padding-right:0}
+  .strip-3d{padding:0 12px;font-size:0;gap:0}
+  .strip-3d-i{font-size:11px;width:26px;height:26px}
   .hero{min-height:620px}
   .hero-in{padding-top:90px}
   .hero .lead{font-size:15px}

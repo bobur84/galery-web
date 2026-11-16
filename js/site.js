@@ -19,8 +19,8 @@
     });
   }
   // активный пункт полосы направлений — в зоне видимости (на телефоне полоса прокручивается)
-  var on = document.querySelector('.strip a.on');
-  if (on) on.parentNode.scrollLeft = on.offsetLeft - 24;
+  var on = document.querySelector('.strip-dirs a.on');
+  if (on) on.parentNode.scrollLeft = on.offsetLeft - on.parentNode.offsetLeft - 24;
 
   // ---- выбор языка: cookie для nginx ----
   document.querySelectorAll('.langs a').forEach(function(a){
@@ -60,7 +60,7 @@
     var input = sf.querySelector('input'), res = document.getElementById('searchRes');
     var lang = document.documentElement.lang, idx = [];
     var strip = document.querySelector('.strip'), dirsLbl = strip ? strip.getAttribute('aria-label') : '';
-    document.querySelectorAll('.strip a').forEach(function(a){
+    document.querySelectorAll('.strip-dirs a, .strip-3d').forEach(function(a){
       idx.push({t: a.textContent, h: a.getAttribute('href'), k: dirsLbl});
     });
     document.querySelectorAll('#brands .brand-link').forEach(function(a){
