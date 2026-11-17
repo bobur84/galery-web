@@ -373,9 +373,6 @@ a.brand-card:hover i{color:#fff}
 .dhb-list div.brand-card i{display:none}
 .dhb-list a.brand-card:hover{background:var(--ink);color:#fff;transform:translateY(-2px)}
 .dhb-list a.brand-card:hover i{color:var(--bronze-l);transform:translateX(4px)}
-.dhb-consult{display:inline-flex;align-items:center;gap:10px;margin-top:26px;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#fff;border-bottom:1px solid rgba(255,255,255,.6);padding-bottom:4px}
-.dhb-consult i{font-style:normal;transition:transform .3s var(--ease)}
-.dhb-consult:hover i{transform:translateX(5px)}
 @media (max-width:700px){.dhb-label span{display:none}.dhb-list{gap:8px}.dhb-list .brand-card{font-size:15px;padding:10px 14px}}
 
 /* ---------- каталог бренда (TRIMLINE) ---------- */
