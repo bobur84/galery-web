@@ -49,6 +49,41 @@ LABELS = {"uz": "UZ", "ru": "RU", "en": "EN"}
 PHOTOS = {}
 
 
+def image_width(path):
+    """Ширина JPEG/PNG без сторонних библиотек (для srcset). 0 — не удалось."""
+    try:
+        data = path.read_bytes()
+    except OSError:
+        return 0
+    if data[:8] == bytes([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]):
+        return int.from_bytes(data[16:20], "big")
+    if data[:2] == bytes([0xFF, 0xD8]):
+        i = 2
+        while i + 9 < len(data):
+            if data[i] != 0xFF:
+                i += 1
+                continue
+            marker = data[i + 1]
+            if marker in (0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF):
+                return int.from_bytes(data[i + 7:i + 9], "big")
+            i += 2 + int.from_bytes(data[i + 2:i + 4], "big")
+    return 0
+
+
+def srcset(name, sizes="(max-width:700px) 100vw, 50vw"):
+    """Уменьшенные копии <имя>@640.jpg / @1200.jpg (tools/resize-photos.ps1):
+    браузер берёт подходящий размер — иначе при отдалении страницы прямые
+    линии на сильно уменьшенном фото «волнятся»."""
+    base = name.rsplit(".", 1)[0]
+    parts = ["/img/photos/%s@%d.jpg %dw" % (base, w, w) for w in (640, 1200)
+             if (HERE / "img" / "photos" / ("%s@%d.jpg" % (base, w))).is_file()]
+    if not parts:
+        return ""
+    full = image_width(HERE / "img" / "photos" / name) or 2400
+    return ' srcset="%s, /img/photos/%s %dw" sizes="%s"' % (
+        ", ".join(parts), html.escape(name, quote=True), full, sizes)
+
+
 def photo(pid, cls=""):
     """Место под фото: <img>, если файл уже есть, иначе подписанная заглушка."""
     if pid not in PHOTOS:
@@ -60,10 +95,11 @@ def photo(pid, cls=""):
         # "hover": второе фото — плавно появляется при наведении мыши
         # "hover_crop" — то же, что crop, но для второго фото
         hcrop = " crop-%s" % item["hover_crop"] if item.get("hover_crop") else ""
-        hover = ('<img class="ph-hover%s" src="/img/photos/%s" alt="" loading="lazy">'
-                 % (hcrop, html.escape(item["hover"], quote=True))) if item.get("hover") else ""
-        return ('<figure class="ph has-img%s %s"><img src="/img/photos/%s" alt=""%s loading="lazy">%s</figure>'
-                % (" has-hover" if hover else "", cls, html.escape(item["file"], quote=True), crop, hover))
+        hover = ('<img class="ph-hover%s" src="/img/photos/%s"%s alt="" loading="lazy">'
+                 % (hcrop, html.escape(item["hover"], quote=True), srcset(item["hover"]))) if item.get("hover") else ""
+        return ('<figure class="ph has-img%s %s"><img src="/img/photos/%s"%s alt=""%s loading="lazy">%s</figure>'
+                % (" has-hover" if hover else "", cls, html.escape(item["file"], quote=True),
+                   srcset(item["file"]), crop, hover))
     return ('<figure class="ph %s" data-photo="%s"><figcaption class="ph-cap">'
             '<b>ФОТО %s</b><span>%s</span></figcaption></figure>'
             % (cls, label, label, html.escape(item["desc"])))
@@ -262,9 +298,10 @@ def showcase(lang):
             continue
         d = DIRECTIONS[di]
         crop = ' class="crop-%s"' % item["crop"] if item.get("crop") else ""
-        items.append('<a class="sc-item" href="%s"><img src="/img/photos/%s" alt=""%s loading="lazy">'
+        items.append('<a class="sc-item" href="%s"><img src="/img/photos/%s"%s alt=""%s loading="lazy">'
                      '<span class="sc-cap"><span>{{cat.%s_t}}</span></span></a>'
-                     % (path(lang, d["slug"]), html.escape(item["file"], quote=True), crop, d["key"]))
+                     % (path(lang, d["slug"]), html.escape(item["file"], quote=True),
+                        srcset(item["file"], "520px"), crop, d["key"]))
     row = "".join(items)
     return '<div class="sc-row">%s</div><div class="sc-row" aria-hidden="true">%s</div>' % (row, row)
 
