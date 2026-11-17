@@ -263,8 +263,8 @@ def showcase(lang):
         d = DIRECTIONS[di]
         crop = ' class="crop-%s"' % item["crop"] if item.get("crop") else ""
         items.append('<a class="sc-item" href="%s"><img src="/img/photos/%s" alt=""%s loading="lazy">'
-                     '<span class="sc-cap"><i>0%d</i>{{cat.%s_t}}</span></a>'
-                     % (path(lang, d["slug"]), html.escape(item["file"], quote=True), crop, di + 1, d["key"]))
+                     '<span class="sc-cap"><span>{{cat.%s_t}}</span></span></a>'
+                     % (path(lang, d["slug"]), html.escape(item["file"], quote=True), crop, d["key"]))
     row = "".join(items)
     return '<div class="sc-row">%s</div><div class="sc-row" aria-hidden="true">%s</div>' % (row, row)
 

@@ -235,13 +235,20 @@ a:hover .ph .ph-hover{opacity:1}
 .sc-item:nth-child(3n+2){width:520px}
 .sc-item:nth-child(4n){height:460px;width:400px}
 .sc-item img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
-.sc-item::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(0deg,rgba(22,22,22,.6),rgba(22,22,22,0))}
-.sc-item:hover img{transform:scale(1.06)}
-.sc-cap{position:absolute;left:22px;right:22px;bottom:20px;z-index:1;display:flex;align-items:baseline;gap:12px;color:#fff;font-family:var(--serif);font-size:24px;line-height:1.2}
-.sc-cap i{font-style:normal;font-family:var(--sans);font-size:11px;letter-spacing:.2em;color:#e9dcc9}
+.sc-item::after{content:"";position:absolute;inset:0;background:rgba(22,22,22,.42);opacity:0;transition:opacity .5s var(--ease)}
+.sc-item:hover img,.sc-item:focus-visible img{transform:scale(1.06)}
+.sc-item:hover::after,.sc-item:focus-visible::after{opacity:1}
+/* название направления: появляется по центру при наведении */
+.sc-cap{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;pointer-events:none}
+.sc-cap span{color:#fff;font-family:var(--serif);font-size:30px;line-height:1.2;letter-spacing:.14em;opacity:0;transform:translateY(18px);transition:opacity .5s var(--ease),transform .6s var(--ease),letter-spacing .7s var(--ease)}
+.sc-cap span::after{content:"";display:block;width:0;height:1px;margin:14px auto 0;background:#e9dcc9;transition:width .6s .15s var(--ease)}
+.sc-item:hover .sc-cap span,.sc-item:focus-visible .sc-cap span{opacity:1;transform:none;letter-spacing:.02em}
+.sc-item:hover .sc-cap span::after,.sc-item:focus-visible .sc-cap span::after{width:48px}
+/* на телефоне наведения нет — подпись видна внизу всегда */
+@media (hover:none){.sc-item::after{opacity:1;background:linear-gradient(0deg,rgba(22,22,22,.55),rgba(22,22,22,0) 45%)}.sc-cap{align-items:flex-end}.sc-cap span{opacity:1;transform:none;font-size:20px;letter-spacing:0}}
 @keyframes sc-run{to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.showcase{overflow-x:auto}.sc-track{animation:none}.sc-row[aria-hidden]{display:none}}
-@media (max-width:700px){.showcase{padding:12px 0 72px}.sc-item{height:300px;width:230px}.sc-item:nth-child(3n+2){width:320px}.sc-item:nth-child(4n){width:260px}.sc-cap{font-size:19px;left:16px;bottom:14px}}
+@media (max-width:700px){.showcase{padding:12px 0 72px}.sc-item{height:300px;width:230px}.sc-item:nth-child(3n+2){width:320px}.sc-item:nth-child(4n){width:260px}}
 
 /* ---------- 3D: фото + текст ---------- */
 .split{display:grid;grid-template-columns:1fr 1fr;min-height:720px;background:var(--soft)}
