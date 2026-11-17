@@ -48,6 +48,8 @@
   "srv.f1_d": "Vazifaga mos materialni tanlashga va chizmalaringiz yoki oʻlchovlaringiz boʻyicha kerakli miqdorni hisoblashga yordam beramiz — ortiqcha qoldiqsiz.",
   "srv.f3_t": "Omborda mavjudligi",
   "srv.f3_d": "Asosiy pozitsiyalarni omborda saqlaymiz — yetkazib berishni oylab kutish shart emas. Ombor hisobi har kuni yangilanadi.",
+  "srv.f4_t": "Dizayner va arxitektorlar uchun",
+  "srv.f4_d": "Namunalar, kataloglar va texnik xususiyatlar. Bozor mutaxassislari uchun alohida shartlar.",
   "srv.f5_t": "Yetkazib berish",
   "srv.f5_d": "Toshkent boʻylab va viloyatlarga yetkazib berish. Uzun va moʻrt mahsulotlarni ehtiyotkorlik bilan qadoqlaymiz.",
   "srv.f6_t": "Ulgurji va chakana",
