@@ -58,8 +58,10 @@ def photo(pid, cls=""):
     if item.get("file"):
         crop = ' class="crop-%s"' % item["crop"] if item.get("crop") else ""
         # "hover": второе фото — плавно появляется при наведении мыши
-        hover = ('<img class="ph-hover" src="/img/photos/%s" alt="" loading="lazy">'
-                 % html.escape(item["hover"], quote=True)) if item.get("hover") else ""
+        # "hover_crop" — то же, что crop, но для второго фото
+        hcrop = " crop-%s" % item["hover_crop"] if item.get("hover_crop") else ""
+        hover = ('<img class="ph-hover%s" src="/img/photos/%s" alt="" loading="lazy">'
+                 % (hcrop, html.escape(item["hover"], quote=True))) if item.get("hover") else ""
         return ('<figure class="ph has-img%s %s"><img src="/img/photos/%s" alt=""%s loading="lazy">%s</figure>'
                 % (" has-hover" if hover else "", cls, html.escape(item["file"], quote=True), crop, hover))
     return ('<figure class="ph %s" data-photo="%s"><figcaption class="ph-cap">'

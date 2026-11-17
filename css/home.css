@@ -205,6 +205,7 @@ a:hover .ph .ph-hover{opacity:1}
 /* фото с белой полосой слева (photos.json: crop "right"): прижать вправо и чуть увеличить */
 /* photos.json crop "bottom": показать нижнюю часть фото */
 .ph img.crop-bottom{object-position:50% 100%}
+.ph img.crop-low{object-position:50% 75%}
 .ph img.crop-right{object-position:100% 50%;transform-origin:100% 50%;transform:scale(1.17)}
 .pcard:hover .has-img img.crop-right,.bk-card:hover .has-img img.crop-right{transform:scale(1.23)}
 .pc-img .ph{position:absolute;inset:0}
