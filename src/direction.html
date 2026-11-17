@@ -28,21 +28,14 @@
       <p class="lead">{{dir.d}}</p>
       <p class="tags">{{dir.tags}}</p>
       <div class="hero-btns">
-        <a href="#dir-brands" class="btn btn-light">{{dir.brands}}</a>
         <a href="/{{lang}}/#contacts" class="btn btn-line-light">{{hero.btn_consult}}</a>
       </div>
     </div>
-  </section>
-
-  <!-- бренды — сразу под шапкой: белая плашка заходит на фото -->
-  <section class="dbrands-sec" id="dir-brands">
-    <div class="wrap">
-      <div class="dbrands-box">
-        <div class="dbrands-head">
-          <h2>{{dir.brands}}</h2>
-          <p>{{dir.brands_sub}}</p>
-        </div>
-        <div class="brand-cards">
+    <!-- бренды направления — тонкая полоса внизу шапки, видна на первом экране -->
+    <div class="dhero-bar" id="dir-brands">
+      <div class="wrap dhb-in">
+        <div class="dhb-label"><b>{{dir.brands}}</b><span>{{dir.brands_sub}}</span></div>
+        <div class="dhb-list">
           {{dir.brand_list}}
         </div>
       </div>
