@@ -347,6 +347,17 @@ a.c-val:hover{color:var(--bronze)}
 a.brand-card:hover{background:var(--ink);color:#fff}
 a.brand-card:hover i{color:#fff}
 
+/* бренды направления — белая плашка, наполовину заходит на фото шапки */
+.dhero{padding-bottom:70px}
+.dbrands-sec{position:relative;z-index:2;margin-top:-110px}
+.dbrands-box{display:grid;grid-template-columns:260px 1fr;gap:36px;align-items:center;background:#fff;padding:34px 36px;box-shadow:0 30px 60px -36px rgba(22,22,22,.45)}
+.dbrands-head h2{font-size:30px;margin-bottom:8px}
+.dbrands-head p{font-size:14px;color:var(--muted);line-height:1.55}
+.dbrands-box .brand-cards{max-width:none;margin:0;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.dbrands-box .brand-card{min-height:96px;padding:20px 22px;font-size:20px}
+@media (max-width:900px){.dbrands-box{grid-template-columns:1fr;gap:20px;padding:26px 20px}.dbrands-sec{margin-top:-60px}}
+@media (max-width:700px){.dbrands-box .brand-cards{grid-template-columns:1fr 1fr}.dbrands-box .brand-card{font-size:16px;min-height:76px;padding:14px 16px}}
+
 /* ---------- каталог бренда (TRIMLINE) ---------- */
 .bk-hero{display:grid;grid-template-columns:1fr 1fr;min-height:600px;background:var(--soft)}
 .bk-hero-txt{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:72px 8% 72px max(48px,calc((100vw - var(--wrap))/2 + 48px))}

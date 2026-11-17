@@ -34,22 +34,25 @@
     </div>
   </section>
 
+  <!-- бренды — сразу под шапкой: белая плашка заходит на фото -->
+  <section class="dbrands-sec" id="dir-brands">
+    <div class="wrap">
+      <div class="dbrands-box">
+        <div class="dbrands-head">
+          <h2>{{dir.brands}}</h2>
+          <p>{{dir.brands_sub}}</p>
+        </div>
+        <div class="brand-cards">
+          {{dir.brand_list}}
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- примеры в интерьере: три фото -->
   <section class="section section-tight">
     <div class="wrap gallery">
       {{dir.gallery}}
-    </div>
-  </section>
-
-  <section class="section section-soft" id="dir-brands">
-    <div class="wrap">
-      <div class="head head-c">
-        <h2>{{dir.brands}}</h2>
-        <p class="sub">{{dir.brands_sub}}</p>
-      </div>
-      <div class="brand-cards">
-        {{dir.brand_list}}
-      </div>
     </div>
   </section>
 
