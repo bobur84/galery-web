@@ -265,8 +265,8 @@ a:hover .ph .ph-hover{opacity:1}
 .drawing .dims{stroke:var(--ink);fill:var(--ink)}
 
 /* ---------- услуги ---------- */
-/* пять услуг — одним рядом; на планшете 3 + 2 (нижние шире), на телефоне столбиком */
-.feats{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
+/* четыре услуги — одним рядом; на планшете 2 × 2, на телефоне столбиком */
+.feats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line)}
 .feat{padding:36px 28px 40px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:background .35s}
 .feat:hover{background:var(--soft)}
 .feat-n{display:block;font-family:var(--serif);font-size:16px;color:var(--bronze);margin-bottom:26px}
@@ -513,9 +513,7 @@ a.brand-card:hover i{color:#fff}
   .tiles,.tiles-4,.tiles-5{grid-template-columns:repeat(2,1fr)}
   .tiles-5 .tile,.tiles-5 .tile:nth-child(-n+2){grid-column:auto}
   .tiles-5 .tile:first-child{grid-column:span 2}
-  .feats{grid-template-columns:repeat(6,1fr)}
-  .feat{grid-column:span 2}
-  .feat:nth-child(n+4){grid-column:span 3}
+  .feats{grid-template-columns:repeat(2,1fr)}
   .feat h3{min-height:0}
   .split,.about-grid,.contact-wrap,.show-grid,.bk-hero{grid-template-columns:1fr}
   .split-img .ph{height:auto;aspect-ratio:4/3}
@@ -554,7 +552,6 @@ a.brand-card:hover i{color:#fff}
   .prow{grid-auto-columns:72%}
   .row-ctl .arr{display:none}
   .feats{grid-template-columns:1fr}
-  .feat,.feat:nth-child(n+4){grid-column:auto}
   .feat{padding:30px 22px}
   .mosaic{grid-template-rows:170px 170px}
   .gallery{grid-template-columns:1fr 1fr;grid-template-rows:220px 160px}
