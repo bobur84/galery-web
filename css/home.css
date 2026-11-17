@@ -301,6 +301,13 @@ a:hover .ph .ph-hover{opacity:1}
 .c-lbl{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--bronze);font-weight:600}
 .c-val{font-family:var(--serif);font-size:24px;color:var(--ink)}
 a.c-val:hover{color:var(--bronze)}
+.c-map{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:6px;text-decoration-thickness:1px;transition:color .25s,text-decoration-color .25s}
+.c-map:hover{text-decoration-color:var(--bronze)}
+.c-maplink{display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink)}
+.c-maplink svg{color:var(--bronze)}
+.c-maplink i{font-style:normal;transition:transform .3s var(--ease)}
+.c-maplink:hover{color:var(--bronze)}
+.c-maplink:hover i{transform:translate(3px,-3px)}
 .c-note{font-size:14px;color:var(--muted)}
 .form-card{background:#fff;padding:48px 44px}
 .form-card h3{font-size:32px;margin-bottom:6px}

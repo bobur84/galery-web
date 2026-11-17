@@ -4,5 +4,6 @@
   "_comment_address": "Адреса здесь тоже нет: он переводится, поэтому лежит в web/i18n/<язык>.json под ключом legal.address.",
   "co.legal_name": "Galereya Best",
   "co.email": "info@galery.uz",
+  "co.map_url": "https://maps.app.goo.gl/wCpj9rsMgLC8uAVz6",
   "co.updated": "19.07.2026"
 }
