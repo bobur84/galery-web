@@ -225,8 +225,8 @@ a:hover .ph .ph-hover{opacity:1}
 
 /* ---------- витрина главной: широкая лента фото, крутится сама ---------- */
 .showcase{margin-top:-40px;padding:0 0 110px;overflow:hidden}
-.sc-track{display:flex;width:max-content;animation:sc-run 70s linear infinite}
-.showcase:hover .sc-track,.showcase:focus-within .sc-track{animation-play-state:paused}
+/* лента движется скриптом (js/site.js): CSS-анимация замирала после возврата «Назад» */
+.sc-track{display:flex;width:max-content;will-change:transform}
 .sc-row{display:flex;gap:18px;padding-right:18px}
 .sc-item{position:relative;flex:0 0 auto;height:460px;width:340px;overflow:hidden;background:var(--soft)}
 .sc-item:nth-child(3n+2){width:520px}
@@ -243,8 +243,7 @@ a:hover .ph .ph-hover{opacity:1}
 .sc-item:hover .sc-cap span::after,.sc-item:focus-visible .sc-cap span::after{width:48px}
 /* на телефоне наведения нет — подпись видна внизу всегда */
 @media (hover:none){.sc-item::after{opacity:1;background:linear-gradient(0deg,rgba(22,22,22,.55),rgba(22,22,22,0) 45%)}.sc-cap{align-items:flex-end}.sc-cap span{opacity:1;transform:none;font-size:20px;letter-spacing:0}}
-@keyframes sc-run{to{transform:translateX(-50%)}}
-@media (prefers-reduced-motion:reduce){.showcase{overflow-x:auto}.sc-track{animation:none}.sc-row[aria-hidden]{display:none}}
+@media (prefers-reduced-motion:reduce){.showcase{overflow-x:auto}.sc-row[aria-hidden]{display:none}}
 @media (max-width:700px){.showcase{padding:12px 0 72px}.sc-item{height:300px;width:230px}.sc-item:nth-child(3n+2){width:320px}.sc-item:nth-child(4n){width:260px}}
 
 /* ---------- 3D: фото + текст ---------- */

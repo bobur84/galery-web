@@ -30,6 +30,27 @@
   });
 
   // ---- главная: слайдер фото в герое ----
+  // ---- витрина: лента едет по кругу скриптом ----
+  // Не CSS-анимацией: та после возврата кнопкой «Назад» замирала на месте.
+  // Пауза — пока мышь над лентой или фото выбрано клавишей Tab.
+  var track = document.querySelector('.sc-track');
+  if (track && !RM){
+    var show = track.parentNode, pos = 0, last = 0, hold = false, SPEED = 0.028; // px за мс
+    show.addEventListener('mouseenter', function(){ hold = true; });
+    show.addEventListener('mouseleave', function(){ hold = false; });
+    show.addEventListener('focusin', function(e){ hold = e.target.matches(':focus-visible'); });
+    show.addEventListener('focusout', function(){ hold = false; });
+    var tick = function(now){
+      var dt = last ? Math.min(now - last, 50) : 0;   // после паузы вкладки — без рывка
+      last = now;
+      var half = track.scrollWidth / 2;
+      if (!hold && half){ pos = (pos + dt * SPEED) % half; track.style.transform = 'translate3d(' + (-pos) + 'px,0,0)'; }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+    window.addEventListener('pageshow', function(){ last = 0; hold = false; });
+  }
+
   var slides = document.querySelectorAll('#slides .slide'), dots = document.querySelectorAll('#dots button');
   if (slides.length > 1){
     var cur = 0, timer = null;
