@@ -253,6 +253,15 @@ a:hover .ph .ph-hover{opacity:1}
 /* ---------- 3D: фото + текст ---------- */
 .split{display:grid;grid-template-columns:1fr 1fr;min-height:720px;background:var(--soft)}
 .split-img .ph{height:100%}
+/* блок 3D: фото медленно «облетает» камера — приближение и сдвиг по кругу */
+.split-img .ph img{object-position:92% 50%;animation:orbit3d 16s ease-in-out infinite;transform-origin:80% 55%}
+@keyframes orbit3d{
+  0%{transform:scale(1.04) translate(0,0)}
+  25%{transform:scale(1.14) translate(1.5%,-1.5%)}
+  50%{transform:scale(1.22) translate(-1.5%,1.5%)}
+  75%{transform:scale(1.12) translate(1%,2%)}
+  100%{transform:scale(1.04) translate(0,0)}}
+@media (prefers-reduced-motion:reduce){.split-img .ph img{animation:none}}
 .split-txt{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:90px 8%}
 .split-txt h2{margin-bottom:16px}
 .drawing{width:220px;color:var(--bronze);margin:30px 0 34px}
