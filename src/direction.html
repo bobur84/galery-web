@@ -26,18 +26,14 @@
       <p class="eyebrow eyebrow-light"><span class="num">{{dir.n}}</span>{{dir.eyebrow}}</p>
       <h1>{{dir.t}}</h1>
       <p class="lead">{{dir.d}}</p>
-      <div class="hero-btns">
-        <a href="/{{lang}}/#contacts" class="btn btn-line-light">{{hero.btn_consult}}</a>
-      </div>
-    </div>
-    <!-- бренды направления — тонкая полоса внизу шапки, видна на первом экране -->
-    <div class="dhero-bar" id="dir-brands">
-      <div class="wrap dhb-in">
-        <div class="dhb-label"><b>{{dir.brands}}</b><span>{{dir.brands_sub}}</span></div>
+      <!-- бренды направления — сразу под описанием, белые плашки -->
+      <div class="dhb" id="dir-brands">
+        <p class="dhb-label">{{dir.brands}} <span>— {{dir.brands_sub}}</span></p>
         <div class="dhb-list">
           {{dir.brand_list}}
         </div>
       </div>
+      <a href="/{{lang}}/#contacts" class="dhb-consult">{{hero.btn_consult}} <i aria-hidden="true">→</i></a>
     </div>
   </section>
 
