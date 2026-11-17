@@ -226,6 +226,23 @@ a:hover .ph .ph-hover{opacity:1}
 .pc-stock.out{color:var(--muted)}
 .section-soft .pcard,.section-soft .pc-prof{background:var(--soft)}
 
+/* ---------- витрина главной: широкая лента фото, крутится сама ---------- */
+.showcase{margin-top:-40px;padding:0 0 110px;overflow:hidden}
+.sc-track{display:flex;width:max-content;animation:sc-run 70s linear infinite}
+.showcase:hover .sc-track,.showcase:focus-within .sc-track{animation-play-state:paused}
+.sc-row{display:flex;gap:18px;padding-right:18px}
+.sc-item{position:relative;flex:0 0 auto;height:460px;width:340px;overflow:hidden;background:var(--soft)}
+.sc-item:nth-child(3n+2){width:520px}
+.sc-item:nth-child(4n){height:460px;width:400px}
+.sc-item img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.sc-item::after{content:"";position:absolute;inset:auto 0 0 0;height:45%;background:linear-gradient(0deg,rgba(22,22,22,.6),rgba(22,22,22,0))}
+.sc-item:hover img{transform:scale(1.06)}
+.sc-cap{position:absolute;left:22px;right:22px;bottom:20px;z-index:1;display:flex;align-items:baseline;gap:12px;color:#fff;font-family:var(--serif);font-size:24px;line-height:1.2}
+.sc-cap i{font-style:normal;font-family:var(--sans);font-size:11px;letter-spacing:.2em;color:#e9dcc9}
+@keyframes sc-run{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.showcase{overflow-x:auto}.sc-track{animation:none}.sc-row[aria-hidden]{display:none}}
+@media (max-width:700px){.showcase{padding:12px 0 72px}.sc-item{height:300px;width:230px}.sc-item:nth-child(3n+2){width:320px}.sc-item:nth-child(4n){width:260px}.sc-cap{font-size:19px;left:16px;bottom:14px}}
+
 /* ---------- 3D: фото + текст ---------- */
 .split{display:grid;grid-template-columns:1fr 1fr;min-height:720px;background:var(--soft)}
 .split-img .ph{height:100%}

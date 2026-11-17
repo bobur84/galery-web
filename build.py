@@ -101,6 +101,10 @@ PRODUCTS = [(c, c.replace("-", ""), cat,
             for cat, codes in MODELS for c in codes]
 # Лента товаров на главной и на странице плинтусов
 RIBBON = ["M11", "M13", "M21", "M33", "M42", "M56", "P1", "P5", "P7", "P10", "C-1", "C-3"]
+# Витрина на главной: широкая лента фото товаров разных направлений.
+# (номер фото из photos.json, номер направления в DIRECTIONS). Фото без файла пропускаются.
+SHOWCASE = [("16", 0), ("19", 1), ("22", 2), ("7", 3), ("18", 0), ("23", 2),
+            ("21", 1), ("26", 3), ("17", 0), ("24", 2), ("27", 3), ("5", 1)]
 
 
 def profile_svg(cat):
@@ -144,7 +148,7 @@ GENERATED = {"lang", "canonical", "alternates", "lang_switch", "legal_body",
              "dir.n", "dir.cls", "dir.t", "dir.d", "dir.tags", "dir.brand_list",
              "dir.others_list", "dir.extra", "dir.gallery", "dir.photo",
              "site_header", "site_footer", "dir_strip", "foot_dirs", "dir_tiles", "products",
-             "bk_items"}
+             "bk_items", "showcase"}
 # Заполняются вручную в company.json; пока не заполнены — сборка предупреждает.
 UNSET = "— уточнить —"
 
@@ -247,6 +251,23 @@ def dir_tiles(lang, skip=None):
     return "\n      ".join(out)
 
 
+def showcase(lang):
+    """Витрина главной: фото + подпись направления, ссылка на его страницу.
+    Ряд повторён дважды — так лента крутится по кругу без шва."""
+    items = []
+    for pid, di in SHOWCASE:
+        item = PHOTOS.get(pid, {})
+        if not item.get("file"):
+            continue
+        d = DIRECTIONS[di]
+        crop = ' class="crop-%s"' % item["crop"] if item.get("crop") else ""
+        items.append('<a class="sc-item" href="%s"><img src="/img/photos/%s" alt=""%s loading="lazy">'
+                     '<span class="sc-cap"><i>0%d</i>{{cat.%s_t}}</span></a>'
+                     % (path(lang, d["slug"]), html.escape(item["file"], quote=True), crop, di + 1, d["key"]))
+    row = "".join(items)
+    return '<div class="sc-row">%s</div><div class="sc-row" aria-hidden="true">%s</div>' % (row, row)
+
+
 def products_row(lang):
     """Лента товаров TRIMLINE. Без фото — заглушка, при наведении схема профиля."""
     out = []
@@ -345,6 +366,7 @@ def render(page, lang, words, templates):
         "foot_dirs": dir_links(lang, active),
         "dir_tiles": dir_tiles(lang),
         "products": products_row(lang),
+        "showcase": showcase(lang),
         "bk_items": bk_items(),
     })
 

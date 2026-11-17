@@ -78,24 +78,11 @@
   </div>
 </section>
 
-<!-- 4. ТОВАРЫ: лента TRIMLINE — фото товара, при наведении схема профиля -->
-<section class="section section-soft">
-  <div class="wrap">
-    <div class="row-head">
-      <div>
-        <p class="eyebrow">{{bk.eye}}</p>
-        <h2>TRIMLINE</h2>
-        <p class="sub">{{bk.lead}}</p>
-      </div>
-      <div class="row-ctl">
-        <button class="arr" data-dir="-1" aria-label="←">←</button>
-        <button class="arr" data-dir="1" aria-label="→">→</button>
-        <a class="btn btn-dark" href="/{{lang}}/trimline/">{{hero.btn_catalog}}</a>
-      </div>
-    </div>
-    <div class="prow" id="prow">
-        {{products}}
-    </div>
+<!-- 4. ВИТРИНА: широкая лента фото товаров всех направлений, медленно прокручивается
+     (список фото — SHOWCASE в build.py). Наведение мыши — пауза. -->
+<section class="showcase" aria-label="{{nav.catalog}}">
+  <div class="sc-track">
+    {{showcase}}
   </div>
 </section>
 
