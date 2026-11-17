@@ -246,7 +246,7 @@ def dir_tiles(lang, skip=None):
             continue
         out.append('<a class="tile" href="%s">%s<div class="tile-b"><span class="tile-n">0%d</span>'
                    '<h3>{{cat.%s_t}}</h3><p>{{cat.%s_d}}</p><span class="tile-br">{{cat.brands_lbl}}: %s</span>'
-                   '<span class="tile-go">{{hero.btn_catalog}} <i aria-hidden="true">→</i></span></div></a>'
+                   '</div></a>'
                    % (path(lang, d["slug"]), photo(str(4 + i)), i + 1, d["key"], d["key"],
                       brand_names(i)))
     return "\n      ".join(out)
