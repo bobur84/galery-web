@@ -84,6 +84,10 @@ def srcset(name, sizes="(max-width:700px) 100vw, 50vw"):
         ", ".join(parts), html.escape(name, quote=True), full, sizes)
 
 
+# Фото на всю ширину экрана: браузеру надо брать полный размер, а не копию.
+FULL_WIDTH = {"1", "2", "3", "14"}
+
+
 def photo(pid, cls=""):
     """Место под фото: <img>, если файл уже есть, иначе подписанная заглушка."""
     if pid not in PHOTOS:
@@ -91,15 +95,16 @@ def photo(pid, cls=""):
     item = PHOTOS[pid]
     label = html.escape(item.get("label", pid))
     if item.get("file"):
+        sizes = "100vw" if pid in FULL_WIDTH or "ph-hero" in cls else "(max-width:700px) 100vw, 50vw"
         crop = ' class="crop-%s"' % item["crop"] if item.get("crop") else ""
         # "hover": второе фото — плавно появляется при наведении мыши
         # "hover_crop" — то же, что crop, но для второго фото
         hcrop = " crop-%s" % item["hover_crop"] if item.get("hover_crop") else ""
         hover = ('<img class="ph-hover%s" src="/img/photos/%s"%s alt="" loading="lazy">'
-                 % (hcrop, html.escape(item["hover"], quote=True), srcset(item["hover"]))) if item.get("hover") else ""
+                 % (hcrop, html.escape(item["hover"], quote=True), srcset(item["hover"], sizes))) if item.get("hover") else ""
         return ('<figure class="ph has-img%s %s"><img src="/img/photos/%s"%s alt=""%s loading="lazy">%s</figure>'
                 % (" has-hover" if hover else "", cls, html.escape(item["file"], quote=True),
-                   srcset(item["file"]), crop, hover))
+                   srcset(item["file"], sizes), crop, hover))
     return ('<figure class="ph %s" data-photo="%s"><figcaption class="ph-cap">'
             '<b>ФОТО %s</b><span>%s</span></figcaption></figure>'
             % (cls, label, label, html.escape(item["desc"])))
