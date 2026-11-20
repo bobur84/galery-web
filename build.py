@@ -95,7 +95,9 @@ def photo(pid, cls=""):
     item = PHOTOS[pid]
     label = html.escape(item.get("label", pid))
     if item.get("file"):
-        sizes = "100vw" if pid in FULL_WIDTH or "ph-hero" in cls else "(max-width:700px) 100vw, 50vw"
+        sizes = ("100vw" if pid in FULL_WIDTH
+                 else "(min-width:1041px) 50vw, 100vw" if "ph-hero" in cls  # шапка направления: фото справа
+                 else "(max-width:700px) 100vw, 50vw")
         crop = ' class="crop-%s"' % item["crop"] if item.get("crop") else ""
         # "hover": второе фото — плавно появляется при наведении мыши
         # "hover_crop" — то же, что crop, но для второго фото

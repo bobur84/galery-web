@@ -352,6 +352,14 @@ a.c-val:hover{color:var(--bronze)}
 .dhero h1{color:#fff;margin-bottom:18px;max-width:900px}
 .dhero .lead{max-width:600px;color:#efe9e1;font-size:17px}
 .dhero .tags{margin:16px 0 30px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#e9dcc9}
+/* компьютер: текст слева на тёмном, фото справа на половину экрана — фото не растягивается и остаётся чётким */
+@media (min-width:1041px){
+  .dhero{background:var(--ink);min-height:600px}
+  .dhero .ph{left:50%}
+  .dhero .ph::after{background:linear-gradient(90deg,rgba(22,22,22,1),rgba(22,22,22,.35) 18%,rgba(22,22,22,0) 45%)}
+  .dhero-in{padding-right:calc(50% + 24px)}
+  .dhero h1{font-size:clamp(40px,3.6vw,58px)}
+}
 .gallery{display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:280px 280px;gap:16px}
 .gallery .ph:first-child{grid-row:span 2}
 .gallery .ph{height:100%}
